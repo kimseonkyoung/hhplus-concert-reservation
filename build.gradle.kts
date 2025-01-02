@@ -34,9 +34,11 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.projectlombok:lombok:1.18.26")
 
     // DB
 	runtimeOnly("com.mysql:mysql-connector-j")
+	implementation("com.h2database:h2:2.2.222")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")

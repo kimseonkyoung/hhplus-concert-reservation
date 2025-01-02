@@ -19,6 +19,13 @@
 [해당자료]((https://github.com/kimseonkyoung/hhplus-concert-reservation/wiki/04.-%ED%94%8C%EB%A1%9C%EC%9A%B0-%EC%B0%A8%ED%8A%B8))
 5. Sequence_Diagrams: 해당 콘서트 예매 시스템에서 domain을 중심으로 user <-> web client <-> domain <-> db 사이의 호출과 응답의 흐름을 표현합니다.
 [해당자료]((https://github.com/kimseonkyoung/hhplus-concert-reservation/wiki/05.-%EC%8B%9C%ED%80%80%EC%8A%A4-%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8))
+6. ERD_Design: 해당 콘서트 예매 시스템의 ERD 설계를 했습니다. 테이블관의 관계와 해당 테이블 내의 컬럼을 표현합니다.
+[해당자료]((https://github.com/kimseonkyoung/hhplus-concert-reservation/wiki/06.-ERD-%EC%84%A4%EA%B3%84))
+
+7. Package_Structure: 해당 콘서트 예매 시스템의 패키지 구조를 설계했습니다. DDD 방식을 지향합니다.
+[해당자료]((https://github.com/kimseonkyoung/hhplus-concert-reservation/wiki/07.-%ED%8C%A8%ED%82%A4%EC%A7%80-%EA%B5%AC%EC%A1%B0-%EC%84%A4%EA%B3%84))
+8. API_Specification: 해당 콘서트 예매 시스템의 API 명세를 정의합니다. REST API HTTP Method와 request response 방식에 대해 정의합니다.
+[해당자료]((https://github.com/kimseonkyoung/hhplus-concert-reservation/wiki/08.-API-%EB%AA%85%EC%84%B8%EC%84%9C))
 
 ## 리뷰 포인트
 <!-- 
@@ -27,6 +34,9 @@
 -->
 1. 좌석 예약 API에서 시퀀스 다이어그램의 데이터 흐름이 적합한지 리뷰 부탁드립니다.
 2. 해당 API 요구사항 분석에서 기술적으로 더 고려해야될 사항이 있는지 리뷰 부탁드립니다.
+3. ERD 설계에서 token테이블과 queue 테이블을 분리할지 고민입니다. 또한 concert 테이블과 concert_scheduler 테이블도 통합 가능성이 있는지 리뷰 부탁드립니다.
+4. 패키지 구조에서 현재 facade는 하나로 구성되어있지만, 차후에 두 개의 facade로 분리하려고 합니다. facade가 동일한 진입점으로써의 역할임에도 불구하고
+다시 facade가 분리되면 facade의 장점이 사라지게 되는 것이 아닌지 궁금합니다.
 
 ## Definition of Done (DoD)
 <!--
@@ -40,8 +50,8 @@
     - [x] 상품 재고 차감 로직 유닛/통합 테스트 완료
     - [ ] TODO - 상품 주문 로직 개발 ( 정책 미수립으로 인해 후속 작업에서 진행 )
 -->
-- [x] API 요구사항 분석 완료 ( [정책 참고자료](https://github.com/kimseonkyoung/hhplus-concert-reservation/wiki/05.-%EC%8B%9C%ED%80%80%EC%8A%A4-%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8))
-- [x] UML 작성 완료 ( [정책 참고자료](https://github.com/kimseonkyoung/hhplus-concert-reservation/wiki/02.-%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD-%EB%B6%84%EC%84%9D ))
-- [ ] TODO - DB 설계 ( DB 테이블간 매핑 설계 진척으로 인해 후속 작업에서 진행 )
-- [ ] TODO - API 명세 및 Mock API 작성 (request, response parameter 값에 대한 미설정으로 인해 후속 작업에서 진행)
-- [ ] TODO - 기본 패키지 구조 및 기타 설정 (DDD 기반 패키지 설계에 대해 조금 더 자료 서치 후 후속 작업에서 진행 )
+- [x] API 요구사항 분석 완료
+- [x] UML 작성 완료 
+- [x] DB 완료 
+- [x] API 명세 및 Mock API 완료 
+- [x] 기본 패키지 구조 및 기타 완료

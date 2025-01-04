@@ -1,3 +1,3 @@
 ## Concert Reservation System - Flow Chart
 
-![flowchart.png](flowchart.png)
+![flowchart.png](png/flowchart.png)

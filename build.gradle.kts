@@ -46,6 +46,10 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	// objectMapper
+	implementation("com.fasterxml.jackson.core:jackson-databind")
+	implementation("org.springframework.boot:spring-boot-starter-json")
 }
 
 tasks.withType<Test> {

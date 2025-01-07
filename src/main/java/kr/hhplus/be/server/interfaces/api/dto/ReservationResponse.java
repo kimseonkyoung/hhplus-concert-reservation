@@ -1,8 +1,11 @@
 package kr.hhplus.be.server.interfaces.api.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReservationResponse {
     private Long reservationId;
     private Long seatId;

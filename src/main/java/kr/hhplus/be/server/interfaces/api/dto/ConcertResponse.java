@@ -1,13 +1,20 @@
 package kr.hhplus.be.server.interfaces.api.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ConcertResponse {
+    private Long concertId;
     private Long scheduleId;
     private String concertName;
     private String concertDate;
 
-    public ConcertResponse(String date) {
+    public ConcertResponse(String concertDate) {
+    }
+    public ConcertResponse(Long concertId, String concertDate ){
+
     }
 }

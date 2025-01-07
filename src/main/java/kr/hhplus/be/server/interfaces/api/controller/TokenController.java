@@ -1,6 +1,10 @@
 package kr.hhplus.be.server.interfaces.api.controller;
 
+import kr.hhplus.be.server.application.facade.ReservationFacade;
+import kr.hhplus.be.server.domain.token.Token;
 import kr.hhplus.be.server.interfaces.api.dto.TokenResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,16 +12,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/queue")
+@RequestMapping("/api/token")
 public class TokenController {
 
-    @GetMapping("/status")
-    public ResponseEntity<TokenResponse> getQueueStatus(@RequestParam("uuid") String uuid) {
-        //UUID 1번일 경우 진입, 101번일 경우 대기
-        if ("1".equals(uuid)) {
-            return ResponseEntity.ok(new TokenResponse(uuid, 0L, "ACTIVE")); // 활성화됨
-        } else {
-            return ResponseEntity.ok(new TokenResponse(uuid, 5L, "WAIT")); // 대기 중
-        }
+    private final ReservationFacade reservationFacade;
+
+    public TokenController(ReservationFacade reservationFacade) {
+        this.reservationFacade = reservationFacade;
+    }
+
+    @GetMapping("/create")
+    public ResponseEntity<TokenResponse> createToken(@RequestParam("userId") Integer userId) {
+        TokenResponse response = reservationFacade.createToken(userId);
+        // x-token 헤더에 UUID 추가
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("x-token", response.getTokenUuid());
+
+        return new ResponseEntity(response, headers, HttpStatus.OK);
     }
 }

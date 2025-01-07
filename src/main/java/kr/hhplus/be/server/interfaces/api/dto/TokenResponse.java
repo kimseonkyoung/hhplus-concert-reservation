@@ -1,13 +1,23 @@
 package kr.hhplus.be.server.interfaces.api.dto;
 
-import lombok.Data;
+import kr.hhplus.be.server.domain.token.TokenStatus;
+import lombok.*;
 
-@Data
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class TokenResponse {
-    private Long tokenUuid;
-    private Long position;
-    private String status;
+    private String tokenUuid;
+    private Integer position;
+    private TokenStatus status;
+    private LocalDateTime expiredAt;
 
-    public TokenResponse(String uuid, Long wait, String i) {
+    public TokenResponse(String tokenUuid, Integer position, TokenStatus status) {
+        this.tokenUuid = tokenUuid;
+        this.position = position;
+        this.status = status;
     }
 }

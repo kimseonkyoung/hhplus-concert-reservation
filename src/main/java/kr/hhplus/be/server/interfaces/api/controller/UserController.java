@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.interfaces.api.controller;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.hhplus.be.server.interfaces.api.dto.BalanceChargeRequest;
+import kr.hhplus.be.server.application.facade.ReservationFacade;
+import kr.hhplus.be.server.interfaces.api.dto.BalanceRequest;
 import kr.hhplus.be.server.interfaces.api.dto.BalanceResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,14 +10,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/user")
 public class UserController {
 
-    @GetMapping("/balance")
-    public ResponseEntity<BalanceResponse> getUserBalance(@RequestParam("userId") Long userId) {
-        return ResponseEntity.ok(new BalanceResponse(1L, 10000));
+    private final ReservationFacade reservationFacade;
+
+    public UserController(ReservationFacade reservationFacade) {
+        this.reservationFacade = reservationFacade;
+    }
+
+    @GetMapping("/balance/{userId}")
+    public ResponseEntity<BalanceResponse> getUserBalance(@PathVariable("userId") long userId) {
+        BalanceResponse response = reservationFacade.getUserBalance(userId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/balance/charge")
-    public ResponseEntity<BalanceResponse> chargeUserBalance(@RequestBody BalanceChargeRequest request) {
-        // 충전 금액이 5000일 경우
-        return ResponseEntity.ok(new BalanceResponse(1L, 15000));
+    public ResponseEntity<BalanceResponse> chargeUserBalance(@RequestBody BalanceRequest request) {
+        BalanceResponse response = reservationFacade.chargeUserBalance(request);
+        return ResponseEntity.ok(response);
     }
 }

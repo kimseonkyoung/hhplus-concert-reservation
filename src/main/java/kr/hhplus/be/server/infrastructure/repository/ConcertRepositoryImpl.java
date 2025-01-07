@@ -1,4 +1,9 @@
 package kr.hhplus.be.server.infrastructure.repository;
 
-public class ConcertRepositoryImpl {
+import kr.hhplus.be.server.domain.concert.repository.ConcertRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class ConcertRepositoryImpl implements ConcertRepository {
+
 }

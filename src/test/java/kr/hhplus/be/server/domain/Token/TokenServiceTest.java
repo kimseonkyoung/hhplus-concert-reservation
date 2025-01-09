@@ -45,7 +45,7 @@ class TokenServiceTest {
 		LocalDateTime expiredAt = createdAt.plusMinutes(5);
 
 		// Given
-		Token newToken = new Token("uuid123", TokenStatus.WAIT, createdAt, expiredAt);
+		Token newToken = Token.create("uuid123", TokenStatus.WAIT, createdAt, expiredAt);
 		given(tokenGenerator.createToken()).willReturn(newToken);
 		doNothing().when(tokenRepository).save(newToken);
 
@@ -68,8 +68,9 @@ class TokenServiceTest {
 		LocalDateTime expiredAt = createdAt.plusMinutes(5);
 		// Given
 		long userId = 123L;
-		Token oldToken = new Token("uuid123", TokenStatus.ACTIVE, createdAt, expiredAt);
-		Token newToken = new Token("uuid456", TokenStatus.ACTIVE,  createdAt, expiredAt);
+		Token oldToken = Token.create("uuid123", TokenStatus.WAIT, createdAt, expiredAt);
+		Token newToken = Token.create("uuid456", TokenStatus.ACTIVE,  createdAt, expiredAt);
+
 		given(tokenRepository.findById(userId)).willReturn(Optional.of(oldToken));
 		given(tokenGenerator.createToken()).willReturn(newToken);
 
@@ -88,8 +89,9 @@ class TokenServiceTest {
 		LocalDateTime expiredAt = createdAt.plusMinutes(5);
 		// Given
 		long userId = 123L;
-		Token oldToken = new Token("uuid123", TokenStatus.WAIT, createdAt, expiredAt);
-		Token newToken = new Token("uuid123567", TokenStatus.WAIT, createdAt, expiredAt);
+		Token oldToken = Token.create("uuid123", TokenStatus.WAIT, createdAt, expiredAt);
+		Token newToken = Token.create("uuid123567", TokenStatus.WAIT, createdAt, expiredAt);
+
 		given(tokenRepository.findById(userId)).willReturn(Optional.of(oldToken));
 		given(tokenGenerator.createToken()).willReturn(newToken);
 		doNothing().when(tokenRepository).updateTokenStatus("uuid123", TokenStatus.EXPIRED);
@@ -117,7 +119,7 @@ class TokenServiceTest {
 		CountDownLatch latch = new CountDownLatch(userRequest);
 
 		given(tokenGenerator.createToken()).willAnswer(invocation ->
-				new Token(UUID.randomUUID().toString(), TokenStatus.WAIT, createdAt, expiredAt));
+				Token.create(UUID.randomUUID().toString(), TokenStatus.WAIT, createdAt, expiredAt));
 
 		// when
 		for (int i=0; i<userRequest; i++) {

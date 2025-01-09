@@ -21,6 +21,6 @@ public interface JpaTokenRespository extends JpaRepository<Token, Long> {
     int selectTokenPosition(@Param("value") Long tokenId);
 
     @Query("SELECT t FROM Token t WHERE t.tokenUuid < :value")
-    Optional<Token> getToken(String tokenUuid);
+    Optional<Token> getToken(@Param("value") String tokenUuid);
 
 }

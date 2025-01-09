@@ -1,16 +1,17 @@
 package kr.hhplus.be.server.infrastructure;
 
+import kr.hhplus.be.server.application.facade.ReservationFacade;
 import kr.hhplus.be.server.common.exception.ErrorCode;
 import kr.hhplus.be.server.domain.service.dto.TokenServiceResponse;
 import kr.hhplus.be.server.domain.token.TokenService;
 import kr.hhplus.be.server.domain.token.TokenStatus;
+import kr.hhplus.be.server.infrastructure.interceptor.TokenInterceptor;
 import kr.hhplus.be.server.interfaces.api.controller.ConcertController;
 import kr.hhplus.be.server.interfaces.api.controller.ReservationController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.mockito.BDDMockito.given;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -26,16 +28,17 @@ import java.time.LocalDateTime;
 
 
 @WebMvcTest({ReservationController.class, ConcertController.class})
+@Import(TokenInterceptor.class)
 public class TokenInterceptorTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @MockitoBean
     private TokenService tokenService;
+
+    @MockitoBean
+    private ReservationFacade facade;
 
     @BeforeEach
     void setup() {

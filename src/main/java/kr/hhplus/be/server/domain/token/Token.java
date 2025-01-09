@@ -37,7 +37,7 @@ public class Token {
 
     }
 
-    public Token(String tokenUuid, TokenStatus status, LocalDateTime createdAt, LocalDateTime expiredAt) {
+    private Token(String tokenUuid, TokenStatus status, LocalDateTime createdAt, LocalDateTime expiredAt) {
         this.tokenUuid = tokenUuid;
         this.status = status;
         this.createdAt = createdAt;

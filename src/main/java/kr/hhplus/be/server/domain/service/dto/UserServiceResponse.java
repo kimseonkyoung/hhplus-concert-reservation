@@ -1,6 +1,9 @@
 package kr.hhplus.be.server.domain.service.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Data
 public class UserServiceResponse {
@@ -17,5 +20,16 @@ public class UserServiceResponse {
         this.userId = userId;
         this.balance = balance;
         this.amount = amount;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class ConcertScheduleResponse {
+        private String date;
+
+        public ConcertScheduleResponse(String date) {
+            this.date = date;
+        }
     }
 }

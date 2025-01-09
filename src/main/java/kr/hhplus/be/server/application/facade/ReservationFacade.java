@@ -1,27 +1,25 @@
 package kr.hhplus.be.server.application.facade;
 
+import kr.hhplus.be.server.application.mapper.facade.ConcertDtoConvert;
 import kr.hhplus.be.server.application.mapper.facade.TokenDtoConverter;
 import kr.hhplus.be.server.application.mapper.facade.UserDtoConverter;
+import kr.hhplus.be.server.domain.concert.ConcertService;
+import kr.hhplus.be.server.domain.service.dto.*;
 import kr.hhplus.be.server.domain.token.TokenService;
 import kr.hhplus.be.server.domain.User.UserService;
-import kr.hhplus.be.server.domain.service.dto.TokenServiceResponse;
-import kr.hhplus.be.server.domain.service.dto.UserServiceRequest;
-import kr.hhplus.be.server.domain.service.dto.UserServiceResponse;
-import kr.hhplus.be.server.interfaces.api.dto.BalanceRequest;
-import kr.hhplus.be.server.interfaces.api.dto.BalanceResponse;
-import kr.hhplus.be.server.interfaces.api.dto.TokenResponse;
+import kr.hhplus.be.server.interfaces.api.dto.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class ReservationFacade {
 
     private final UserService userService;
     private final TokenService tokenService;
-
-    public ReservationFacade(UserService userService, TokenService tokenService) {
-        this.userService = userService;
-        this.tokenService = tokenService;
-    }
+    private final ConcertService concertService;
 
     /**
      * 해당 유저의 잔액을 조회하기 위해 요청을 전달합니다.
@@ -59,5 +57,38 @@ public class ReservationFacade {
         // TokenService 호출
         TokenServiceResponse response = tokenService.createToken(userId);
         return TokenDtoConverter.toControllerResponse(response);
+    }
+
+    /**
+     * 해당 유저가 예약할 수 있는 콘서트 목록을 조회하기 위한 요청을 전달합니다.
+     * @return 콘서트 목록 반환(ConcertList)
+     * @Author [kimseonkyoung]
+     */
+    public ConcertResponse getConcertList(int offset, int limit) {
+        ConcertServiceResponse serviceResponse = concertService.getConcertList(offset, limit);
+        ConcertResponse concertResponse = ConcertDtoConvert.toControllerConcertListResponse(serviceResponse);
+        return concertResponse;
+    }
+
+    /**
+     * 해당 유저가 선택한 콘서트가 열리는 날짜 목록을 조회하기 위한 요청을 전달합니다.
+     * @return 콘서트 날짜 목록 반환(ConcertList)
+     * @Author [kimseonkyoung]
+     */
+    public ConcertDatesResponse getConcertDates(Long concertId, int offset, int limit) {
+        ConcertServiceDatesResponse concertDateList = concertService.getConcertDateList(concertId, offset, limit);
+        ConcertDatesResponse response = ConcertDtoConvert.tocontrollerConcertDateListResponse(concertDateList);
+        return response;
+    }
+
+    /**
+     * 해당 유저가 선택한 날짜의 예약 가능한 날짜가 조회됩니다.
+     * @return 콘서트 좌석 목록 반환(SeatList)
+     * @Author [kimseonkyoung]
+     */
+    public List<SeatResponse> getSeatsForDate(Long concertScheduleId) {
+        List<SeatServiceResponse> seatResponse = concertService.getSeatsForDate(concertScheduleId);
+        List<SeatResponse> response = ConcertDtoConvert.tocontrollerConcertSeatListResponse(seatResponse);
+        return response;
     }
 }

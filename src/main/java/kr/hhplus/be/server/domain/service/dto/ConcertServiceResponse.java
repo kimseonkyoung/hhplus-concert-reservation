@@ -1,4 +1,4 @@
 package kr.hhplus.be.server.domain.service.dto;
 
-public class ConcertDto {
+public class ConcertServiceResponse {
 }

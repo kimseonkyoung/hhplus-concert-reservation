@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/reservation")
 public class ReservationController {
 
-    @PostMapping("/seat")
+    @PostMapping("/Seats")
     public ResponseEntity<ReservationResponse> reserveSeat(@RequestBody ReservationRequest request) {
         return ResponseEntity.ok(
                 new ReservationResponse(1L,1L, "SUCCESS")

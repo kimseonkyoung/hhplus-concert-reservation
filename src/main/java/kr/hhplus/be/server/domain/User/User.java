@@ -17,7 +17,7 @@ public class User {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "value", nullable = false)
+    @Column(name = "balance_value", nullable = false)
     private Integer balance;
 
     public User() {}

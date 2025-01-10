@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.interfaces.api.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Getter
@@ -7,8 +8,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BalanceRequest {
-    private Long userId;  // 사용자 ID
-    private Integer amount; // 충전 금액
+
+    @Schema(description = "사용자 ID", example = "1")
+    private Long userId;
+
+    @Schema(description = "충전금액", example = "10000")
+    private Integer amount;
 
 
     public BalanceRequest(long userId, int amount) {

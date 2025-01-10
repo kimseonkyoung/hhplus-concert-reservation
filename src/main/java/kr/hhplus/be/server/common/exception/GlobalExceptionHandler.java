@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.common.exception;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import kr.hhplus.be.server.domain.exception.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,11 +10,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import static kr.hhplus.be.server.common.exception.ErrorCode.*;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "kr.hhplus.be.server.common.interfaces.api.*")
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> HandlerException(Exception e) {
+    public ResponseEntity<ErrorResponse> HandlerException(Exception e, HttpServletRequest request) {
         return ResponseEntity.status(500).body(new kr.hhplus.be.server.common.exception.ErrorResponse(COMMON_ERROR));
     }
 

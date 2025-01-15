@@ -1,7 +1,7 @@
 ## Sequence_Diagram
 
 ### 토큰 발급 요청 API
-![토큰 발급 요청 API.png](png%2F%ED%86%A0%ED%81%B0%20%EB%B0%9C%EA%B8%89%20%EC%9A%94%EC%B2%AD%20API.png)
+![토큰 발급 요청 API.jpg](png%2F%ED%86%A0%ED%81%B0%20%EB%B0%9C%EA%B8%89%20%EC%9A%94%EC%B2%AD%20API.jpg)
 
 ### 유저 대기열 관리 API
 ![유저 대기열 관리 API.png](png%2F%EC%9C%A0%EC%A0%80%20%EB%8C%80%EA%B8%B0%EC%97%B4%20%EA%B4%80%EB%A6%AC%20API.png)

@@ -46,6 +46,18 @@ dependencies {
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	// objectMapper
+	implementation("com.fasterxml.jackson.core:jackson-databind")
+	implementation("org.springframework.boot:spring-boot-starter-json")
+
+	//swagger
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+	implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
+
+	compileOnly("org.springframework.boot:spring-boot-starter-web")
+	annotationProcessor("org.projectlombok:lombok")
+	testAnnotationProcessor("org.projectlombok:lombok")
 }
 
 tasks.withType<Test> {

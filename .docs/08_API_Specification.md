@@ -1,23 +1,65 @@
 # API 명세서
 
-## 1. 콘서트 공연 날짜 목록 조회
-- **URL**: `/concert/availableDates`
+## 1. 토큰 발급 API
+- **URL**: `/token`
 - **Method**: `GET`
-- **Description**: 해당 콘서트의 공연 날짜를 조회합니다..
+- **Description**: 토큰을 생성/재발급 받습니다.
 - **Request Parameters**: 없음
 - **Response**:
     ```json
-    [
-      {
-        "date": "2025-01-01",
-        "date": "2025-01-02",
-        "date": "2025-01-03",
-        "date": "2025-01-04"
-      }
-    ]
+    {
+      "uuid": 4536783645345,
+      "remainingTime": 300
+    }
     ```
 
-## 2. 콘서트 좌석 조회
+## 2.콘서트 목록 조회
+- **URL**: `/concert`
+- **Method**: `GET`
+- **Description**: 콘서트 목록을 조회합니다.
+- **Request Parameters**: 없음
+- **Response**:
+    ```json
+  {
+    "totalCount": 10,
+    "currentPage": 1,
+    "data": [
+      {
+       "concertId": 1,
+       "concertName": "에일리의 콘서트"
+      },
+      {
+        "concertId": 2,
+        "concertName": "김연자의 콘서트"
+      },
+      {
+       "concertId": 3,
+       "concertName": "실리카겔 콘서트"
+     }
+   ]
+  }
+    ```
+
+## 3. 콘서트 공연 날짜 목록 조회
+- **URL**: `/concert/availableDates`
+- **Method**: `GET`
+- **Description**: 해당 콘서트의 공연 날짜를 조회합니다..
+- **Request Parameters**: 
+    - `concertId` (쿼리 스트링): 콘서트의 id
+- **Response**:
+    ```json
+    {
+    "date": [
+      "2025-01-01",
+      "2025-01-02",
+      "2025-01-03",
+      "2025-01-04"
+      ]
+   }
+    ```
+
+
+## 4. 콘서트 좌석 조회
 - **URL**: `/concerts/seats`
 - **Method**: `GET`
 - **Description**: 특정 콘서트의 좌석 정보를 조회합니다.
@@ -51,7 +93,7 @@
     }
     ```
 
-## 3. 좌석 예약
+## 5. 좌석 예약
 - **URL**: `/reservations`
 - **Method**: `POST`
 - **Description**: 좌석을 예약합니다.
@@ -72,22 +114,7 @@
     }
     ```
 
-## 4. 대기열 순번 및 대기열 진입 여부 조회
-- **URL**: `/queue/status`
-- **Method**: `GET`
-- **Description**: 유저의 대기 순번을 조회합니다.
-- **Request Parameters**:
-    - `uuid` (쿼리 스트링): 해당 유저의 토큰 UUID
-- **Response**:
-    ```json
-    {
-      "tokenUuid": "cancelled",
-      "position": 0,
-      "status": "ACTIVE"
-    }
-  ```
-
-## 5. 유저의 잔액 조회
+## 6. 유저의 잔액 조회
 - **URL**: `/user/balance`
 - **Method**: `GET`
 - **Description**:유저의 잔액을 조회합니다.
@@ -100,7 +127,7 @@
       "balance": 10000
     }
     ```
-## 6. 유저 잔액 충전
+## 7. 유저 잔액 충전
 - **URL**: `/user/balance/charge`
 - **Method**: `POST`
 - **Description**: 유저의 잔액을 충전합니다.

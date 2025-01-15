@@ -2,7 +2,7 @@ package kr.hhplus.be.server.interfaces.api.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.hhplus.be.server.domain.concert.SeatStatus;
-import kr.hhplus.be.server.domain.service.dto.SeatServiceResponse;
+import kr.hhplus.be.server.domain.common.dto.SeatServiceResponse;
 import lombok.*;
 
 @Getter
@@ -16,7 +16,7 @@ public class SeatResponse {
     private Long seatId;
 
     @Schema(description = "콘서트 스케줄 ID", example = "1L")
-    private Long concertScheduleId;
+    private Long scheduleId;
 
     @Schema(description = "좌석 번호", example = "12")
     private int seatNo;
@@ -29,7 +29,7 @@ public class SeatResponse {
 
     public SeatResponse(SeatServiceResponse serviceResponse) {
         this.seatId = serviceResponse.getSeatId();
-        this.concertScheduleId = serviceResponse.getConcertScheduleId();
+        this.scheduleId = serviceResponse.getConcertScheduleId();
         this.seatNo = serviceResponse.getNo();
         this.seatPrice = serviceResponse.getPrice();
         this.status = serviceResponse.getStatus();

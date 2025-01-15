@@ -7,7 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservationRequest {
+    private Long schedule_id;
     private Long seatId;
     private Long userId;
-    private Long userUuid;
+    private String userUuid;
 }

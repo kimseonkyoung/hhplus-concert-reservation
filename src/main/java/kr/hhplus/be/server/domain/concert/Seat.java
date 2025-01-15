@@ -1,18 +1,18 @@
 package kr.hhplus.be.server.domain.concert;
 
 import jakarta.persistence.*;
-import kr.hhplus.be.server.domain.token.TokenStatus;
+import kr.hhplus.be.server.common.log.DomainLogger;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Seat")
 @Setter
 @Getter
 @AllArgsConstructor
+@DomainLogger
 public class Seat {
 
     @Id
@@ -44,5 +44,13 @@ public class Seat {
 
     public static Seat create(long seatId, Long concertScheduleId, SeatStatus status) {
         return new Seat(seatId, concertScheduleId, status);
+    }
+
+    public void updateSeatCompleted() {
+        this.status = SeatStatus.COMPLETED;
+    }
+
+    public void updateSeatProgress() {
+        this.status = SeatStatus.PROGRESS;
     }
 }

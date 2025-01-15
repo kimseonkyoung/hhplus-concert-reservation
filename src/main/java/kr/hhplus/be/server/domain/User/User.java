@@ -1,16 +1,18 @@
 package kr.hhplus.be.server.domain.User;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.common.log.DomainLogger;
+import kr.hhplus.be.server.domain.common.exception.InsufficientBalanceException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Balance")
 @Setter
 @Getter
 @AllArgsConstructor
+@DomainLogger
+@Table(name = "Balance")
 public class User {
 
     @Id
@@ -33,5 +35,13 @@ public class User {
         }
         this.balance += amount;
         return amount;
+    }
+
+    public Integer deductBalance(int price) {
+        if (this.balance < price) {
+            throw new InsufficientBalanceException("잔액이 부족합니다.");
+        }
+        this.balance -= price;
+        return balance;
     }
 }

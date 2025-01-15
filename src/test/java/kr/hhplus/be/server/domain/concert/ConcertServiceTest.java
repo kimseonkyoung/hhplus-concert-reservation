@@ -1,9 +1,10 @@
 package kr.hhplus.be.server.domain.concert;
 
+import kr.hhplus.be.server.domain.common.dto.*;
 import kr.hhplus.be.server.domain.concert.repository.ConcertRepository;
 import kr.hhplus.be.server.domain.concert.repository.ConcertScheduleRepository;
 import kr.hhplus.be.server.domain.concert.repository.SeatRepository;
-import kr.hhplus.be.server.domain.service.dto.*;
+import kr.hhplus.be.server.domain.concert.service.ConcertService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -110,13 +111,13 @@ public class ConcertServiceTest {
     void test3() {
         // given
         List<Seat> seats = Arrays.asList(
-                Seat.create(1L, 1L, SeatStatus.INACTIVE),
-                Seat.create(2L, 1L, SeatStatus.INACTIVE),
-                Seat.create(3L, 1L, SeatStatus.INACTIVE),
-                Seat.create(4L, 1L, SeatStatus.ACTIVE),
-                Seat.create(5L, 1L, SeatStatus.ACTIVE),
-                Seat.create(6L, 1L, SeatStatus.ACTIVE),
-                Seat.create(7L, 1L, SeatStatus.ACTIVE)
+                Seat.create(1L, 1L, SeatStatus.AVAILABLE),
+                Seat.create(2L, 1L, SeatStatus.AVAILABLE),
+                Seat.create(3L, 1L, SeatStatus.AVAILABLE),
+                Seat.create(4L, 1L, SeatStatus.PROGRESS),
+                Seat.create(5L, 1L, SeatStatus.PROGRESS),
+                Seat.create(6L, 1L, SeatStatus.PROGRESS),
+                Seat.create(7L, 1L, SeatStatus.PROGRESS)
         );
         given(seatRepository.getSeatsForDate(1L)).willReturn(seats);
 
@@ -128,9 +129,9 @@ public class ConcertServiceTest {
         assertEquals(1L, response.get(1).getConcertScheduleId());
         assertEquals(1L, response.get(2).getConcertScheduleId());
         assertEquals(1L, response.get(3).getConcertScheduleId());
-        assertEquals(SeatStatus.INACTIVE, response.get(0).getStatus());
-        assertEquals(SeatStatus.INACTIVE, response.get(1).getStatus());
-        assertEquals(SeatStatus.INACTIVE, response.get(2).getStatus());
-        assertEquals(SeatStatus.ACTIVE, response.get(3).getStatus());
+        assertEquals(SeatStatus.AVAILABLE, response.get(0).getStatus());
+        assertEquals(SeatStatus.AVAILABLE, response.get(1).getStatus());
+        assertEquals(SeatStatus.AVAILABLE, response.get(2).getStatus());
+        assertEquals(SeatStatus.PROGRESS, response.get(3).getStatus());
     }
 }

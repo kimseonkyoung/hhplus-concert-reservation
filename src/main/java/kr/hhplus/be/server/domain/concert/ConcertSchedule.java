@@ -2,6 +2,7 @@ package kr.hhplus.be.server.domain.concert;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import kr.hhplus.be.server.common.log.DomainLogger;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "concert_schedule")
 @Setter
 @Getter
+@DomainLogger
 public class ConcertSchedule {
 
     @Id

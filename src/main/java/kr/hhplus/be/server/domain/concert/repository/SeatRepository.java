@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface SeatRepository {
     List<Seat> getSeatsForDate(Long concertScheduleId);
+
+    Seat getSeatInfo(Long seatId);
 }

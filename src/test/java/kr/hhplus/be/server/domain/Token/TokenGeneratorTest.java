@@ -21,7 +21,7 @@ class TokenGeneratorTest {
     @Test
     void shouldGenerateValidToken() {
         // When
-        Token generatedToken = tokenGenerator.createToken();
+        Token generatedToken = tokenGenerator.createToken(1);
 
         // Then
         assertNotNull(generatedToken);
@@ -37,8 +37,8 @@ class TokenGeneratorTest {
     @Test
     void shouldGenerateUniqueTokens() {
         // When
-        Token token1 = tokenGenerator.createToken();
-        Token token2 = tokenGenerator.createToken();
+        Token token1 = tokenGenerator.createToken(1);
+        Token token2 = tokenGenerator.createToken(1);
 
         // Then
         assertNotEquals(token1.getTokenUuid(), token2.getTokenUuid());

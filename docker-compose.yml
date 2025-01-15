@@ -10,8 +10,8 @@ services:
       - MYSQL_PASSWORD=application
       - MYSQL_DATABASE=hhplus
     volumes:
-      - ./data/mysql/:/var/lib/mysql
-
+      - ./data/mysql/:/var/lib/mysql            # MySQL 데이터 저장
+      - ./init-scripts/:/docker-entrypoint-initdb.d/  # 초기화 스크립트
 networks:
   default:
     driver: bridge

@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.token;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.common.log.DomainLogger;
 import kr.hhplus.be.server.domain.User.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @AllArgsConstructor
+@DomainLogger
 public class Token {
 
     @Id
@@ -44,9 +46,15 @@ public class Token {
         this.expiredAt = expiredAt;
     }
 
-    // 생성자를 팩토리 메서드로 생성
-    public static Token create(String tokenUuid, TokenStatus status, LocalDateTime createdAt, LocalDateTime expiredAt) {
-        return new Token(tokenUuid, status, createdAt, expiredAt);
+    public static Token createActive(String tokenUuid, LocalDateTime createdAt) {
+        return new Token(
+                tokenUuid, TokenStatus.ACTIVE, createdAt,
+                LocalDateTime.of(1970, 1, 1, 0, 0, 0)
+        );
     }
-
+    public static Token createWait(String tokenUuid, LocalDateTime createdAt) {
+        return new Token(tokenUuid, TokenStatus.WAIT, createdAt,
+                LocalDateTime.of(1970, 1, 1, 0, 0, 0)
+        );
+    }
 }

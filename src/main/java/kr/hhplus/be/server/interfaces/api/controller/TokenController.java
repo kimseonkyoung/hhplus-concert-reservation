@@ -2,8 +2,8 @@ package kr.hhplus.be.server.interfaces.api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.hhplus.be.server.application.facade.ReservationFacade;
-import kr.hhplus.be.server.domain.token.Token;
+import kr.hhplus.be.server.application.usecase.ConcertReservationFacade;
+import kr.hhplus.be.server.common.log.AllRequiredLogger;
 import kr.hhplus.be.server.interfaces.api.dto.TokenResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,12 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/token")
+@AllRequiredLogger
 @Tag(name = "Token API", description = "토큰 관련 API")
 public class TokenController {
 
-    private final ReservationFacade reservationFacade;
+    private final ConcertReservationFacade reservationFacade;
 
-    public TokenController(ReservationFacade reservationFacade) {
+    public TokenController(ConcertReservationFacade reservationFacade) {
         this.reservationFacade = reservationFacade;
     }
 

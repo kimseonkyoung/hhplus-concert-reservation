@@ -1,11 +1,11 @@
 package kr.hhplus.be.server.infrastructure;
 
-import kr.hhplus.be.server.application.facade.ReservationFacade;
-import kr.hhplus.be.server.common.exception.ErrorCode;
-import kr.hhplus.be.server.domain.service.dto.TokenServiceResponse;
-import kr.hhplus.be.server.domain.token.TokenService;
+import kr.hhplus.be.server.application.usecase.ConcertReservationFacade ;
+import kr.hhplus.be.server.common.globalErrorHandler.ErrorCode;
+import kr.hhplus.be.server.domain.common.dto.TokenServiceResponse;
+import kr.hhplus.be.server.domain.token.service.TokenService;
 import kr.hhplus.be.server.domain.token.TokenStatus;
-import kr.hhplus.be.server.infrastructure.interceptor.TokenInterceptor;
+import kr.hhplus.be.server.common.interceptor.TokenInterceptor;
 import kr.hhplus.be.server.interfaces.api.controller.ConcertController;
 import kr.hhplus.be.server.interfaces.api.controller.ReservationController;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +38,7 @@ public class TokenInterceptorTest {
     private TokenService tokenService;
 
     @MockitoBean
-    private ReservationFacade facade;
+    private ConcertReservationFacade facade;
 
     @BeforeEach
     void setup() {

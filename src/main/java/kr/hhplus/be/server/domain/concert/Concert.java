@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.concert;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.common.log.DomainLogger;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import lombok.Setter;
 @Table(name = "concert")
 @Setter
 @Getter
+@DomainLogger
 public class Concert {
 
     @Id

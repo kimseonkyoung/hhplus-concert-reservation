@@ -1,9 +1,9 @@
 package kr.hhplus.be.server.domain.Token;
 
-import kr.hhplus.be.server.domain.service.dto.TokenServiceResponse;
+import kr.hhplus.be.server.domain.common.dto.TokenServiceResponse;
 import kr.hhplus.be.server.domain.token.Token;
 import kr.hhplus.be.server.domain.token.TokenGenerator;
-import kr.hhplus.be.server.domain.token.TokenService;
+import kr.hhplus.be.server.domain.token.service.TokenService;
 import kr.hhplus.be.server.domain.token.TokenStatus;
 import kr.hhplus.be.server.domain.token.repository.TokenRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -45,8 +45,8 @@ class TokenServiceTest {
 		LocalDateTime expiredAt = createdAt.plusMinutes(5);
 
 		// Given
-		Token newToken = Token.create("uuid123", TokenStatus.WAIT, createdAt, expiredAt);
-		given(tokenGenerator.createToken()).willReturn(newToken);
+		Token newToken = Token.createWait("uuid123", createdAt);
+		given(tokenGenerator.createToken(51)).willReturn(newToken);
 		doNothing().when(tokenRepository).save(newToken);
 
 		// When
@@ -54,7 +54,7 @@ class TokenServiceTest {
 		response.setPosition(5);
 
 		// Then
-		verify(tokenGenerator, times(1)).createToken();
+		verify(tokenGenerator, times(1)).createToken(1);
 		verify(tokenRepository, times(1)).save(newToken);
 		verify(tokenRepository, never()).updateTokenStatus(anyString(), any());
 		assertEquals("uuid123", response.getTokenUuid());
@@ -68,11 +68,11 @@ class TokenServiceTest {
 		LocalDateTime expiredAt = createdAt.plusMinutes(5);
 		// Given
 		long userId = 123L;
-		Token oldToken = Token.create("uuid123", TokenStatus.WAIT, createdAt, expiredAt);
-		Token newToken = Token.create("uuid456", TokenStatus.ACTIVE,  createdAt, expiredAt);
+		Token oldToken = Token.createWait("uuid123", createdAt);
+		Token newToken = Token.createActive("uuid456", createdAt);
 
 		given(tokenRepository.findById(userId)).willReturn(Optional.of(oldToken));
-		given(tokenGenerator.createToken()).willReturn(newToken);
+		given(tokenGenerator.createToken(1)).willReturn(newToken);
 
 		// When
 		tokenService.createToken(userId);
@@ -89,11 +89,11 @@ class TokenServiceTest {
 		LocalDateTime expiredAt = createdAt.plusMinutes(5);
 		// Given
 		long userId = 123L;
-		Token oldToken = Token.create("uuid123", TokenStatus.WAIT, createdAt, expiredAt);
-		Token newToken = Token.create("uuid123567", TokenStatus.WAIT, createdAt, expiredAt);
+		Token oldToken = Token.createWait("uuid123", createdAt);
+		Token newToken = Token.createWait("uuid123567", createdAt);
 
 		given(tokenRepository.findById(userId)).willReturn(Optional.of(oldToken));
-		given(tokenGenerator.createToken()).willReturn(newToken);
+		given(tokenGenerator.createToken(1)).willReturn(newToken);
 		doNothing().when(tokenRepository).updateTokenStatus("uuid123", TokenStatus.EXPIRED);
 		doNothing().when(tokenRepository).save(newToken);
 
@@ -102,7 +102,7 @@ class TokenServiceTest {
 
 		// Then
 		verify(tokenRepository, times(1)).updateTokenStatus("uuid123", TokenStatus.EXPIRED);
-		verify(tokenGenerator, times(1)).createToken();
+		verify(tokenGenerator, times(1)).createToken(1);
 		verify(tokenRepository, times(1)).save(newToken);
 		assertEquals("uuid123567", response.getTokenUuid());
 		assertEquals(TokenStatus.WAIT, response.getStatus());
@@ -112,14 +112,13 @@ class TokenServiceTest {
 	@DisplayName("유저 30명이 토큰 발급 요청시 30번 토큰 발급 테스트")
 	void test5() throws InterruptedException {
 		LocalDateTime createdAt = LocalDateTime.now();
-		LocalDateTime expiredAt = createdAt.plusMinutes(5);
 		// given
 		int userRequest = 30;
 		ExecutorService exeCutorService = Executors.newFixedThreadPool(userRequest);
 		CountDownLatch latch = new CountDownLatch(userRequest);
 
-		given(tokenGenerator.createToken()).willAnswer(invocation ->
-				Token.create(UUID.randomUUID().toString(), TokenStatus.WAIT, createdAt, expiredAt));
+		given(tokenGenerator.createToken(20)).willAnswer(invocation ->
+				Token.createWait(UUID.randomUUID().toString(), createdAt));
 
 		// when
 		for (int i=0; i<userRequest; i++) {
@@ -138,7 +137,7 @@ class TokenServiceTest {
 		exeCutorService.shutdown();
 
 		// then
-		verify(tokenGenerator, times(userRequest)).createToken();
+		verify(tokenGenerator, times(userRequest)).createToken(20);
 		verify(tokenRepository, times(userRequest)).save(any(Token.class));
 	}
 }

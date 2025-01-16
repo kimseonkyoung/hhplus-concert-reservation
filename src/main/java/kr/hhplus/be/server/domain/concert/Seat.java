@@ -23,13 +23,14 @@ public class Seat {
     @Column(name = "concert_schedule_id", nullable = false)
     private Long concertScheduleId;
 
-    @Column(name = "no", nullable = false)
+    @Column(name = "seat_no", nullable = false)
     private int no;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "seat_price", nullable = false)
     private int price;
 
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING) // Enum을 문자열로 저장
     private SeatStatus status;
 
     public Seat() {

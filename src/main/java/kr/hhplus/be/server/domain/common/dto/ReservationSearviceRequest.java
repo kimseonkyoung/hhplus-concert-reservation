@@ -16,5 +16,8 @@ public class ReservationSearviceRequest {
     private String userUuid;
 
     public ReservationSearviceRequest(Long seatId, Long scheduleId, Long userId) {
+        this.seatId = seatId;
+        this.schedule_id = scheduleId;
+        this.userId = userId;
     }
 }

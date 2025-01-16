@@ -41,7 +41,7 @@ public class Reservation {
     @Column(name = "expired_at", nullable = false)
     private LocalDateTime expiredAt;
 
-    @Column(name = "confirm_at", nullable = false)
+    @Column(name = "confirm_at")
     private LocalDateTime comfirmAt;
 
     public Reservation() {

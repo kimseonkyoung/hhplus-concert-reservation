@@ -8,11 +8,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Setter
 @Getter
 @AllArgsConstructor
 @DomainLogger
-@Table(name = "Balance")
+@Table(name = "User")
 public class User {
 
     @Id
@@ -29,19 +28,17 @@ public class User {
         return new User(userId, balance);
     }
 
-    public int chargeBalance(int amount) {
+    public void chargeBalance(int amount) {
         if (amount <= 0) {
             throw new IllegalStateException("중전 금액은 1원 이상이여야합니다.");
         }
         this.balance += amount;
-        return amount;
     }
 
-    public Integer deductBalance(int price) {
+    public void deductBalance(int price) {
         if (this.balance < price) {
             throw new InsufficientBalanceException("잔액이 부족합니다.");
         }
         this.balance -= price;
-        return balance;
     }
 }

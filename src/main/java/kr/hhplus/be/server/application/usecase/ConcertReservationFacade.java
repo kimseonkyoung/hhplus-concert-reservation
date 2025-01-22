@@ -143,10 +143,10 @@ public class ConcertReservationFacade  {
         // 7. 좌석 상태 완료
         concertService.updateSeatCompleted(reservationServiceResponse.getSeatId());
 
-        // 6. 토큰 만료
+        // 8. 토큰 만료
         tokenService.expireTokenOnCompleted(tokenUuid);
 
-        // 7. Service dto -> controller dto 변환
+        // 9. Service dto -> controller dto 변환
         PaymentResponse controllerResponse = PaymentDtoConvert.toControllerPaymentResponse(serviceResponse);
         return controllerResponse;
     }

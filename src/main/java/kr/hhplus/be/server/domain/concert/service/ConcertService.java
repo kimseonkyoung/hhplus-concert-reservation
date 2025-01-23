@@ -1,6 +1,9 @@
 package kr.hhplus.be.server.domain.concert.service;
 
+import kr.hhplus.be.server.common.globalErrorHandler.ErrorCode;
+import kr.hhplus.be.server.common.globalErrorHandler.ErrorResponse;
 import kr.hhplus.be.server.common.log.AllRequiredLogger;
+import kr.hhplus.be.server.domain.common.exception.SeatProgressException;
 import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.Seat;
@@ -75,6 +78,9 @@ public class ConcertService {
 
     public void updateSeatProgress(Long seatId) {
         Seat seat = seatRepository.getSeatInfo(seatId);
+        if (seat.isOccupied()) {
+            throw new SeatProgressException(new ErrorResponse(ErrorCode.COMMON_ERROR));
+        }
         seat.updateSeatProgress();
     }
 

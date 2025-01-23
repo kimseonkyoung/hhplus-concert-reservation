@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.User.service;
 
-import jakarta.persistence.TableGenerator;
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.common.globalErrorHandler.ErrorCode;
 import kr.hhplus.be.server.common.globalErrorHandler.ErrorResponse;
@@ -12,7 +11,6 @@ import kr.hhplus.be.server.domain.common.exception.UserNotFoundException;
 import kr.hhplus.be.server.domain.common.mapper.UserEntityConverter;
 import kr.hhplus.be.server.domain.common.dto.UserServiceRequest;
 import kr.hhplus.be.server.domain.common.dto.UserServiceResponse;
-import org.apache.commons.lang3.concurrent.ConcurrentException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 

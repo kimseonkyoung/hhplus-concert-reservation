@@ -5,6 +5,7 @@ import kr.hhplus.be.server.common.log.DomainLogger;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -43,6 +44,10 @@ public class Reservation {
 
     @Column(name = "confirm_at")
     private LocalDateTime comfirmAt;
+
+    @Version
+    @ColumnDefault("0")
+    private Long version;
 
     public Reservation() {
 

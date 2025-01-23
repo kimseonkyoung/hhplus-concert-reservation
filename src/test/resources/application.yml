@@ -32,6 +32,12 @@ spring.config.activate.on-profile: local, test
 
 spring:
   datasource:
+    hikari:
+      maximum-pool-size: 10        # 최대 연결 수
+      minimum-idle: 2             # 최소 유지할 연결 수
+      idle-timeout: 30000         # 연결이 반환된 후 유지될 최대 시간 (밀리초)
+      max-lifetime: 1800000       # 연결의 최대 생명 주기 (밀리초)
+      connection-timeout: 20000
     url: jdbc:mysql://localhost:3307/hhplus?characterEncoding=UTF-8&serverTimezone=UTC
     username: application
     password: application

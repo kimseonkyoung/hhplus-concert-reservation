@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ReservationSearviceRequest {
     private Long schedule_id;
     private Long seatId;
@@ -19,5 +18,11 @@ public class ReservationSearviceRequest {
         this.seatId = seatId;
         this.schedule_id = scheduleId;
         this.userId = userId;
+    }
+    public ReservationSearviceRequest(Long seatId, Long scheduleId, Long userId, String userUuid) {
+        this.seatId = seatId;
+        this.schedule_id = scheduleId;
+        this.userId = userId;
+        this.userUuid = userUuid;
     }
 }

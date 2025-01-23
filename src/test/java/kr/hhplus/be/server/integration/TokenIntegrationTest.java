@@ -10,4 +10,6 @@ package kr.hhplus.be.server.integration;
  * 5) 현재 예약 가능 좌석이 32개일시, 100명의 유저가 요청했을 경우 18명만 'ACTIVE' 로 반환하고 나머지는 'WAIT' 후 순번을 반환한다.
  */
 public class TokenIntegrationTest {
+
+
 }

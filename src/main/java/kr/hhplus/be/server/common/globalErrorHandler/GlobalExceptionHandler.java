@@ -2,6 +2,7 @@ package kr.hhplus.be.server.common.globalErrorHandler;
 
 
 import jakarta.servlet.http.HttpServletRequest;
+import kr.hhplus.be.server.domain.common.exception.ConcurrentOperationException;
 import kr.hhplus.be.server.domain.common.exception.InsufficientBalanceException;
 import kr.hhplus.be.server.domain.common.exception.ReservationNotFoundException;
 import kr.hhplus.be.server.domain.common.exception.UserNotFoundException;
@@ -39,6 +40,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> InsufficientBalanceException(Exception e) {
         return ResponseEntity.status(400).body(new ErrorResponse(INSUFFICIENT_BALANCE));
     }
+
+    @ExceptionHandler(ConcurrentOperationException.class)
+    public ResponseEntity<ErrorResponse> ConcurrentOperationException(Exception e) {
+        return ResponseEntity.status(400).body(new ErrorResponse(INSUFFICIENT_BALANCE));
+    }
+
+
 }
 
 

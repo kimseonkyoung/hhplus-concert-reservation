@@ -27,4 +27,9 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> save(User user) {
         return Optional.of(jpaUserRepository.save(user));
     }
+
+    @Override
+    public Optional<User> findByPessimisticLock(Long userId) {
+        return Optional.of(jpaUserRepository.findByPessimisticLock(userId));
+    }
 }

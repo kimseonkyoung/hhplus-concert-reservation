@@ -11,6 +11,8 @@ public enum ErrorCode {
     BAD_REQUEST(HttpServletResponse.SC_BAD_REQUEST, "잘못된 요청입니다."),
     MISSING_USER(HttpServletResponse.SC_NOT_FOUND,"해당 유저를 찾을 수 없습니다."),
     MISSING_RESERVATION(HttpServletResponse.SC_BAD_REQUEST, "해당 예약정보를 찾을 수 없습니다."),
+    CONCURRENCY_CHARGE(HttpServletResponse.SC_BAD_REQUEST, "동시 충전 요청이 되었습니다."),
+    CONCURRENCY_USE(HttpServletResponse.SC_BAD_REQUEST, "동시 결제 요청이 되었습니다."),
     INSUFFICIENT_BALANCE(HttpServletResponse.SC_BAD_REQUEST, "현재 잔액이 충분하지 않습니다.");
 
     private final int statusCode;

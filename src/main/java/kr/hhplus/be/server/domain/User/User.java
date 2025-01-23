@@ -3,13 +3,14 @@ package kr.hhplus.be.server.domain.User;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.common.log.DomainLogger;
 import kr.hhplus.be.server.domain.common.exception.InsufficientBalanceException;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
+@Setter
 @Getter
-@AllArgsConstructor
 @DomainLogger
 @Table(name = "User")
 public class User {
@@ -21,7 +22,17 @@ public class User {
     @Column(name = "balance_value", nullable = false)
     private Integer balance;
 
-    public User() {}
+    @Version
+    @ColumnDefault("0")
+    private Long version;
+
+    public User() {
+    }
+
+    public User(Long userId, Integer balance) {
+        this.userId = userId;
+        this.balance = balance;
+    }
 
     // 생성자를 팩토리 메서드로 생성
     public static User create(Long userId, Integer balance) {

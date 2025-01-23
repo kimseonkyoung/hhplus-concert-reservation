@@ -50,7 +50,11 @@ public class UserService {
         user.chargeBalance(amount);
 
         // 유저 정보 업데이트
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (OptimisticLockingFailureException e) {
+            throw new ConcurrentOperationException(new ErrorResponse(ErrorCode.CONCURRENCY_USE));
+        }
 
         // Entity -> Service Dto 변환
         return UserEntityConverter.ToServiceResponse(user);

@@ -18,7 +18,7 @@ public class ReservationDtoConverter {
     public static ReservationSearviceRequest toServiceReservationRequest(ReservationRequest request) {
         return new ReservationSearviceRequest(
                 request.getSeatId(),
-                request.getSchedule_id(),
+                request.getScheduleId(),
                 request.getUserId()
         );
     }

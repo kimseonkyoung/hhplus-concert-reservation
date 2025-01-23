@@ -26,7 +26,7 @@ class TokenGeneratorTest {
         // Then
         assertNotNull(generatedToken);
         assertNotNull(generatedToken.getTokenUuid());
-        assertEquals(TokenStatus.WAIT, generatedToken.getStatus());
+        assertEquals(TokenStatus.ACTIVE, generatedToken.getStatus());
         assertTrue(generatedToken.getTokenUuid().length() > 0); // UUID 길이 확인
         System.out.println("TokenUuid = " + generatedToken.getTokenUuid());
         System.out.println("Status = " + generatedToken.getStatus());

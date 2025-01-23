@@ -9,6 +9,7 @@ public class ReservationEntityConverter {
     public static ReservationServiceResponse toServiceReservationResponse(Reservation reservations) {
         return new ReservationServiceResponse(
                 reservations.getReservationId(),
+                reservations.getSeatId(),
                 reservations.getUserId(),
                 reservations.getExpiredAt(),
                 reservations.getStatus()

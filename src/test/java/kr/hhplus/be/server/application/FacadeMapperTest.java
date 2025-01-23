@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.application;
 
-import kr.hhplus.be.server.application.mapper.facade.UserDtoConverter;
-import kr.hhplus.be.server.domain.service.dto.UserServiceRequest;
+import kr.hhplus.be.server.application.common.mapper.UserDtoConverter;
+import kr.hhplus.be.server.domain.common.dto.UserServiceRequest;
 import kr.hhplus.be.server.interfaces.api.dto.BalanceRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,17 +1,31 @@
 version: '3'
 services:
+  redis:
+    image: docker.io/bitnami/redis:7.4
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis_data:/bitnami/redis/data'
   mysql:
     image: mysql:8.0
+    container_name: hhplus-concert-reservation-mysql-1
     ports:
       - "3307:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=roo
+      - MYSQL_ROOT_PASSWORD=application
       - MYSQL_USER=application
       - MYSQL_PASSWORD=application
       - MYSQL_DATABASE=hhplus
     volumes:
-      - ./data/mysql/:/var/lib/mysql
-
+      - ./data/mysql/:/var/lib/mysql            # MySQL 데이터 저장
+      - ./init-scripts/:/docker-entrypoint-initdb.d/  # 초기화 스크립트
 networks:
   default:
     driver: bridge
+volumes:
+  redis_data:
+    driver: local

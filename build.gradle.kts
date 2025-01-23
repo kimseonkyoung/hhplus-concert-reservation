@@ -55,9 +55,17 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
 	implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
 
+	// redisson
+	implementation("org.redisson:redisson-spring-boot-starter:3.18.0")
+	implementation("com.google.guava:guava:31.1-jre")
+
 	compileOnly("org.springframework.boot:spring-boot-starter-web")
 	annotationProcessor("org.projectlombok:lombok")
 	testAnnotationProcessor("org.projectlombok:lombok")
+}
+
+tasks.withType<JavaCompile> {
+	options.compilerArgs.add("-parameters")
 }
 
 tasks.withType<Test> {

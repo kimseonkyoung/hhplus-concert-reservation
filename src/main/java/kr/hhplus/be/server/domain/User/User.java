@@ -6,6 +6,7 @@ import kr.hhplus.be.server.domain.common.exception.InsufficientBalanceException;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 @Setter

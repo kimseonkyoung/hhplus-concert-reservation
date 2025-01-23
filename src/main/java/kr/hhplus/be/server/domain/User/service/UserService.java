@@ -43,12 +43,8 @@ public class UserService {
         Long userId = serviceRequest.getUserId();
         int amount = serviceRequest.getAmount();
         // 유저 조회
-        User user = userRepository.findByPessimisticLock(userId)
-                .orElseThrow(() -> new UserNotFoundException("해당 유저는 존재하지 않습니다." + userId));
-/*
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("해당 유저는 존재하지 않습니다." + userId));
-*/
 
         // 충전금액을 더하는 비즈니스 로직
         user.chargeBalance(amount);
@@ -73,6 +69,10 @@ public class UserService {
         user.deductBalance(price);
 
         // 유저 정보 업데이트
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (OptimisticLockingFailureException e) {
+            throw new ConcurrentOperationException(new ErrorResponse(ErrorCode.CONCURRENCY_USE));
+        }
     }
 }

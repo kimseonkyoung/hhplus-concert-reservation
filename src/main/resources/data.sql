@@ -2,7 +2,7 @@ TRUNCATE TABLE seat;
 TRUNCATE TABLE user;
 -- User 테이블 데이터 삽입
 INSERT INTO user (user_id, balance_value) VALUE (1, 1000);
-INSERT INTO user (user_id, balance_value) VALUE (2, 10000);
+INSERT INTO user (user_id, balance_value) VALUE (2, 1000);
 INSERT INTO user (user_id, balance_value) VALUE (3, 1000);
 -- Seat 테이블 데이터 삽입
 INSERT INTO seat (seat_id, concert_schedule_id, seat_no, seat_price, status) VALUES

@@ -22,6 +22,10 @@ public class User {
     @Column(name = "balance_value", nullable = false)
     private Integer balance;
 
+    @Version
+    @ColumnDefault("0")
+    private Long version;
+
     public User() {
     }
 

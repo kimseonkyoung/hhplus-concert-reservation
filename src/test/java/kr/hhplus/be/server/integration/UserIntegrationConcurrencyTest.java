@@ -48,14 +48,14 @@ public class UserIntegrationConcurrencyTest {
 
         //then
         UserServiceResponse response = userService.getUserBalance(2L);
-        long expectedBalance = 800;
+        long expectedBalance = 900;
         System.out.println("최종 포인트" + response.getBalance());
         System.out.println("기대 포인트" + expectedBalance);
 
         if (response.getBalance() == expectedBalance) {
-            System.out.println("비관적 락 테스트 성공");
+            System.out.println("낙관적 락 테스트 성공");
         } else {
-            System.out.println("비관적 락 테스트 실패: 충돌 처리 실패");
+            System.out.println("낙관적 락 테스트 실패: 충돌 처리 실패");
         }
         System.out.println("총 걸린 시간: " + (end - start) + "ms");
         executorService.shutdown();

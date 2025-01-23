@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.application.usecase;
 
 import kr.hhplus.be.server.application.common.mapper.*;
+import kr.hhplus.be.server.common.rediss.DistributedLock;
 import kr.hhplus.be.server.domain.common.dto.*;
 import kr.hhplus.be.server.domain.concert.service.ConcertService;
 import kr.hhplus.be.server.domain.reservation.service.PaymentService;
@@ -103,6 +104,7 @@ public class ConcertReservationFacade  {
      * @Author [kimseonkyoung]
      */
     @Transactional
+    @DistributedLock(key = "#seatLock")
     public ReservationResponse reserveSeat(ReservationRequest request, String tokenUuid) {
         // 1. controller request dto -> service dto 변환
         ReservationSearviceRequest reservationRequest = ReservationDtoConverter.toServiceReservationRequest(request);

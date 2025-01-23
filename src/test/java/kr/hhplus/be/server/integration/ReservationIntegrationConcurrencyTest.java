@@ -47,7 +47,7 @@ public class ReservationIntegrationConcurrencyTest {
     private JpaReservationRepository reservationRepository;
 
     @Test
-    @DisplayName("유저 100명 낙관적락 테스트")
+    @DisplayName("유저 100명 분산락 테스트")
     void test1 () {
         int numberOfUsers = 100; // 100명의 동시 요청
         CompletableFuture<Void> futures = new CompletableFuture<>();

@@ -3,6 +3,7 @@ package kr.hhplus.be.server.domain.concert.service;
 import kr.hhplus.be.server.common.globalErrorHandler.ErrorCode;
 import kr.hhplus.be.server.common.globalErrorHandler.ErrorResponse;
 import kr.hhplus.be.server.common.log.AllRequiredLogger;
+import kr.hhplus.be.server.domain.common.exception.ConcurrentOperationException;
 import kr.hhplus.be.server.domain.common.exception.SeatProgressException;
 import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertSchedule;
@@ -81,7 +82,11 @@ public class ConcertService {
         if (seat.isOccupied()) {
             throw new SeatProgressException(new ErrorResponse(ErrorCode.COMMON_ERROR));
         }
-        seat.updateSeatProgress();
+        try {
+            seat.updateSeatProgress();
+        } catch (OptimisticLockingFailureException e) {
+            throw new ConcurrentOperationException(new ErrorResponse(ErrorCode.CONCURRENCY_CHARGE));
+        }
     }
 
     public void updateSeatCompleted(Long seatId) {

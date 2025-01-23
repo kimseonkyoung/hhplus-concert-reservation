@@ -3,6 +3,7 @@ package kr.hhplus.be.server.integration;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.application.usecase.ConcertReservationFacade;
+import kr.hhplus.be.server.domain.common.exception.SeatProgressException;
 import kr.hhplus.be.server.domain.concert.Seat;
 import kr.hhplus.be.server.domain.concert.SeatStatus;
 import kr.hhplus.be.server.domain.concert.repository.SeatRepository;
@@ -63,7 +64,7 @@ public class ReservationIntegrationConcurrencyTest {
             futures = CompletableFuture.runAsync(() -> {
                 try {
                     concertReservationFacade.reserveSeat(reservationRequest, tokenUuid);
-                } catch (Exception e) {
+                } catch (SeatProgressException e) {
                     System.out.println("예약 실패: " + e.getMessage());
                 }
             }, executorService);

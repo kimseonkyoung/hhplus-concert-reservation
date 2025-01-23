@@ -1,3 +1,5 @@
+TRUNCATE TABLE seat;
+TRUNCATE TABLE user;
 -- User 테이블 데이터 삽입
 INSERT INTO user (user_id, balance_value) VALUE (1, 1000);
 INSERT INTO user (user_id, balance_value) VALUE (2, 10000);

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import kr.hhplus.be.server.domain.User.service.UserService;
 import kr.hhplus.be.server.domain.common.dto.UserServiceRequest;
 import kr.hhplus.be.server.domain.common.dto.UserServiceResponse;
+import kr.hhplus.be.server.domain.common.exception.ConcurrentOperationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,12 @@ public class UserIntegrationConcurrencyTest {
         long start = System.currentTimeMillis();
         for (int i = 0; i < numberOfRequests; i++) {
             futures = CompletableFuture.runAsync(() -> {
-                userService.chargeUserBalance(userServiceRequest);
-            }, executorService);
+                try {
+                    userService.chargeUserBalance(userServiceRequest);
+                } catch (ConcurrentOperationException e) {
+                    System.out.println("ConcurrentOperationException 발생: " + e.getMessage());
+                }
+                }, executorService);
             System.out.println("신청 횟수: " + (i+1));
         }
 
@@ -44,14 +49,14 @@ public class UserIntegrationConcurrencyTest {
 
         //then
         UserServiceResponse response = userService.getUserBalance(1L);
-        long expectedBalance = numberOfRequests*500 + 1000;
+        long expectedBalance = 1500; // 하나의 요청만 성공해야 함
         System.out.println("최종 포인트" + response.getBalance());
         System.out.println("기대 포인트" + expectedBalance);
 
-        if (Objects.equals(response.getBalance(), expectedBalance)) {
-            System.out.println("동시성 제어 성공");
+        if (response.getBalance() == expectedBalance) {
+            System.out.println("낙관적 락 테스트 성공");
         } else {
-            System.out.println("동시성 제어 실패: Race Condition 발생");
+            System.out.println("낙관적 락 테스트 실패: 충돌 처리 실패");
         }
         System.out.println("총 걸린 시간: " + (end - start) + "ms");
         executorService.shutdown();

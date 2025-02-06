@@ -1,7 +1,7 @@
 -- Seat 테이블 데이터 삽입
 TRUNCATE TABLE seat;
 INSERT INTO seat (seat_id, concert_schedule_id, seat_no, seat_price, status) VALUES
-(1, 1001, 1, 100, 'PROGRESS'),
+(1, 1001, 1, 100, 'AVAILABLE'),
 (2, 1001, 2, 100, 'PROGRESS'),
 (3, 1001, 3, 100, 'PROGRESS'),
 (4, 1001, 4, 100, 'PROGRESS'),
@@ -51,12 +51,3 @@ INSERT INTO seat (seat_id, concert_schedule_id, seat_no, seat_price, status) VAL
 (48, 1001, 48, 100, 'PROGRESS'),
 (49, 1001, 49, 100, 'PROGRESS'),
 (50, 1001, 50, 100, 'PROGRESS');
-/*
--- Token 테이블 데이터 삽입
-INSERT INTO token (token_uuid, status, created_at, expired_at) VALUES
-    ('uuid-1', 'WAITING', NOW(), DATE_ADD(NOW(), INTERVAL 5 MINUTE)),
-    ('uuid-2', 'ACTIVE', NOW(), DATE_ADD(NOW(), INTERVAL 5 MINUTE)),
-    ('uuid-3', 'WAITING', NOW(), DATE_ADD(NOW(), INTERVAL 5 MINUTE)),
-    ('uuid-4', 'EXPIRED', NOW() - INTERVAL 10 MINUTE, NOW() - INTERVAL 5 MINUTE),
-('uuid-5', 'WAITING', NOW(), DATE_ADD(NOW(), INTERVAL 5 MINUTE));
-*/

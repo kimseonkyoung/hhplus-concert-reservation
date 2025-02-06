@@ -1,12 +1,17 @@
 package kr.hhplus.be.server.domain.User.service;
 
+import jakarta.transaction.Transactional;
+import kr.hhplus.be.server.common.globalErrorHandler.ErrorCode;
+import kr.hhplus.be.server.common.globalErrorHandler.ErrorResponse;
 import kr.hhplus.be.server.common.log.AllRequiredLogger;
 import kr.hhplus.be.server.domain.User.User;
 import kr.hhplus.be.server.domain.User.repository.UserRepository;
+import kr.hhplus.be.server.domain.common.exception.ConcurrentOperationException;
 import kr.hhplus.be.server.domain.common.exception.UserNotFoundException;
 import kr.hhplus.be.server.domain.common.mapper.UserEntityConverter;
 import kr.hhplus.be.server.domain.common.dto.UserServiceRequest;
 import kr.hhplus.be.server.domain.common.dto.UserServiceResponse;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,6 +36,7 @@ public class UserService {
         return UserEntityConverter.ToServiceResponse(user);
     }
 
+    @Transactional
     public UserServiceResponse chargeUserBalance(UserServiceRequest serviceRequest) {
         Long userId = serviceRequest.getUserId();
         int amount = serviceRequest.getAmount();
@@ -42,13 +48,17 @@ public class UserService {
         user.chargeBalance(amount);
 
         // 유저 정보 업데이트
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (OptimisticLockingFailureException e) {
+            throw new ConcurrentOperationException(new ErrorResponse(ErrorCode.CONCURRENCY_USE));
+        }
 
         // Entity -> Service Dto 변환
         return UserEntityConverter.ToServiceResponse(user);
-
     }
 
+    @Transactional
     public void deductBalance(Long userId, int price) {
         if(userId <= 0) {
             throw new IllegalArgumentException("잘못된 userId 입니다.");
@@ -61,6 +71,10 @@ public class UserService {
         user.deductBalance(price);
 
         // 유저 정보 업데이트
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (OptimisticLockingFailureException e) {
+            throw new ConcurrentOperationException(new ErrorResponse(ErrorCode.CONCURRENCY_USE));
+        }
     }
 }

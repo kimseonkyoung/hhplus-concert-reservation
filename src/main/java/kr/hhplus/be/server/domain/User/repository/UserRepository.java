@@ -9,4 +9,6 @@ public interface UserRepository {
     Optional<User> findById(Long userId);
 
     Optional<User> save(User user);
+
+    Optional<User> findByPessimisticLock(Long userId);
 }

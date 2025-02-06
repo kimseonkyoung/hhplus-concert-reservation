@@ -20,8 +20,9 @@ public class ReservationServiceResponse {
     private ReservationStatus status;
     private LocalDateTime expiredAt;
 
-    public ReservationServiceResponse(Long reservationId, Long userId, LocalDateTime expiredAt, ReservationStatus status) {
+    public ReservationServiceResponse(Long reservationId, Long seatId, Long userId, LocalDateTime expiredAt, ReservationStatus status) {
         this.reservationId = reservationId;
+        this.seatId = seatId;
         this.userId = userId;
         this.status = status;
         this.expiredAt = expiredAt;

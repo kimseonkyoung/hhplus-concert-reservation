@@ -48,6 +48,6 @@ public interface JpaTokenRepository extends JpaRepository<Token, Long> {
     @Query("update Token t SET t.status =: status WHERE t.tokenId IN : tokenIds")
     void updateTokenActive(@Param("Ids") List<Long> waitActiveIds, @Param("stats") TokenStatus status);
 
-    @Query(value = "SELECT count(t) FROM Token t WHERE t.status =: status")
-    int countActiveToken(@Param("stats") TokenStatus tokenStatus);
+    @Query(value = "SELECT count(t) FROM Token t WHERE t.status = :status")
+    int countActiveToken(@Param("status") TokenStatus tokenStatus);
 }

@@ -1,9 +1,10 @@
 package kr.hhplus.be.server.domain.User;
 
 import kr.hhplus.be.server.domain.User.repository.UserRepository;
-import kr.hhplus.be.server.domain.exception.UserNotFoundException;
-import kr.hhplus.be.server.domain.service.dto.UserServiceRequest;
-import kr.hhplus.be.server.domain.service.dto.UserServiceResponse;
+import kr.hhplus.be.server.domain.User.service.UserService;
+import kr.hhplus.be.server.domain.common.dto.UserServiceRequest;
+import kr.hhplus.be.server.domain.common.dto.UserServiceResponse;
+import kr.hhplus.be.server.domain.common.exception.UserNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

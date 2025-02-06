@@ -1,10 +1,12 @@
 package kr.hhplus.be.server.application.usecase;
 
 import kr.hhplus.be.server.application.common.mapper.*;
+import kr.hhplus.be.server.common.rediss.DistributedLock;
 import kr.hhplus.be.server.domain.common.dto.*;
 import kr.hhplus.be.server.domain.concert.service.ConcertService;
 import kr.hhplus.be.server.domain.reservation.service.PaymentService;
 import kr.hhplus.be.server.domain.reservation.service.ReservationService;
+import kr.hhplus.be.server.domain.reservation.service.ReservationTestService;
 import kr.hhplus.be.server.domain.token.service.TokenService;
 import kr.hhplus.be.server.domain.User.service.UserService;
 import kr.hhplus.be.server.interfaces.api.dto.*;
@@ -23,6 +25,7 @@ public class ConcertReservationFacade  {
     private final ConcertService concertService;
     private final ReservationService reservationService;
     private final PaymentService paymentService;
+    private final ReservationTestService reservationTestService;
 
     /**
      * 해당 유저의 잔액을 조회하기 위해 요청을 전달합니다.
@@ -101,6 +104,7 @@ public class ConcertReservationFacade  {
      * @Author [kimseonkyoung]
      */
     @Transactional
+    @DistributedLock(key = "#seatLock")
     public ReservationResponse reserveSeat(ReservationRequest request, String tokenUuid) {
         // 1. controller request dto -> service dto 변환
         ReservationSearviceRequest reservationRequest = ReservationDtoConverter.toServiceReservationRequest(request);
@@ -143,10 +147,10 @@ public class ConcertReservationFacade  {
         // 7. 좌석 상태 완료
         concertService.updateSeatCompleted(reservationServiceResponse.getSeatId());
 
-        // 6. 토큰 만료
+        // 8. 토큰 만료
         tokenService.expireTokenOnCompleted(tokenUuid);
 
-        // 7. Service dto -> controller dto 변환
+        // 9. Service dto -> controller dto 변환
         PaymentResponse controllerResponse = PaymentDtoConvert.toControllerPaymentResponse(serviceResponse);
         return controllerResponse;
     }

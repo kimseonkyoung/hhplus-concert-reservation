@@ -2,7 +2,7 @@ package kr.hhplus.be.server.interfaces.api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.hhplus.be.server.application.facade.ReservationFacade;
+import kr.hhplus.be.server.application.usecase.ConcertReservationFacade;
 import kr.hhplus.be.server.interfaces.api.dto.BalanceRequest;
 import kr.hhplus.be.server.interfaces.api.dto.BalanceResponse;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "User API", description = "유저 관련 API")
 public class UserController {
 
-    private final ReservationFacade reservationFacade;
+    private final ConcertReservationFacade reservationFacade;
 
-    public UserController(ReservationFacade reservationFacade) {
+    public UserController(ConcertReservationFacade reservationFacade) {
         this.reservationFacade = reservationFacade;
     }
 

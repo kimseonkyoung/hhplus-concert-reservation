@@ -13,6 +13,7 @@ public class Token {
     private String tokenUuid;
     private TokenStatus status;
     private LocalDateTime createdAt;
+    private LocalDateTime expiresAt;
 
     public Token() {
     }
@@ -30,4 +31,5 @@ public class Token {
     public static Token createWait(String tokenUuid, LocalDateTime createdAt) {
         return new Token(tokenUuid, TokenStatus.WAIT, createdAt);
     }
+
 }

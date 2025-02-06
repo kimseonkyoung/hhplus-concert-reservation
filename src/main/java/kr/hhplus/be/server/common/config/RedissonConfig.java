@@ -29,5 +29,4 @@ public class RedissonConfig {
         redisson = Redisson.create(config);
         return redisson;
     }
-
 }

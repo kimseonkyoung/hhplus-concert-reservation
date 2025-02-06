@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import org.redisson.api.RMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Repository
 public class TokenRepositoryImpl implements TokenRepository {
@@ -75,10 +76,25 @@ public class TokenRepositoryImpl implements TokenRepository {
     }
 
     @Override
-    public List<Token> findExpiredActiveTokens(LocalDateTime now, TokenStatus tokenStatus) {
-        return List.of();
+    public List<String> findWaitingTokens(int count) {
+        RScoredSortedSet<String> waitingQueue = redissonClient.getScoredSortedSet(WAITING_QUEUE_KEY);
+        return waitingQueue.stream().limit(count).collect(Collectors.toList());
+    }
+
+    @Override
+    public void moveTokenToActiveQueue(String tokenUuid) {
+        RScoredSortedSet<String> waitingQueue = redissonClient.getScoredSortedSet(WAITING_QUEUE_KEY);
+        RScoredSortedSet<String> activeQueue = redissonClient.getScoredSortedSet(ACTIVE_QUEUE_KEY);
+
+        // WAITING 대기열에서 제거
+        waitingQueue.remove(tokenUuid);
+        // ACTIVE 대기열에 추가
+        activeQueue.add(System.currentTimeMillis(), tokenUuid);
+    }
+
+    @Override
+    public int countActiveTokens() {
+        RScoredSortedSet<String> activeQueue = redissonClient.getScoredSortedSet(ACTIVE_QUEUE_KEY);
+        return activeQueue.size();
     }
 }
-
-
-

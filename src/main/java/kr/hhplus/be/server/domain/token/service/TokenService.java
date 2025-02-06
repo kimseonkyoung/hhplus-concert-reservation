@@ -96,44 +96,4 @@ public class TokenService {
         RScoredSortedSet<String> activeQueue = redissonClient.getScoredSortedSet(ACTIVE_QUEUE_KEY);
         return activeQueue.size();
     }
-
-    public void expireTokenOnCompleted(String tokenUuid) {
-        tokenRepository.updateTokenStatus(tokenUuid, TokenStatus.EXPIRED);
-    }
-
-//    /** 만료 시간이 지난 토큰을 expired 시키고, 그만큼의 토큰을 WAIT -> ACTIVE로 변경 */
-//    @Transactional
-//    public void processExpiredActiveTokens() {
-//        // 1. 만료된 토큰 조회
-//        LocalDateTime now = LocalDateTime.now();
-//        List<Token> expiredActiveTokens = tokenRepository.findExpiredActiveTokens(now, TokenStatus.ACTIVE);
-//
-//        // 2. 만료된 ACTIVE 토큰 수 확인
-//        int expiredActiveCount = expiredActiveTokens.size();
-//        if (expiredActiveCount > 0 ) {
-//            // 2-1. ACTIVE 토큰을 EXPIRED 업데이트
-//            List<Long> expiredActiveIds = expiredActiveTokens.stream().map(Token::getTokenId).toList();
-//            tokenRepository.updateTokenExpired(expiredActiveIds, TokenStatus.EXPIRED);
-//            /** log */
-//        } else {
-//            /** log */
-//        }
-//
-//        // 3. 만료된 토큰 수만큼 WAIT 토큰 조회
-//        if (expiredActiveCount > 0 ) {
-//            List<Token> waitTokens = tokenRepository.findWaitTokens(TokenStatus.WAIT, expiredActiveCount);
-//
-//            if (!waitTokens.isEmpty()) {
-//                // 3-1. WAIT 토큰을 ACTIVE로 업데이트
-//                List<Long> waitTokensIds = waitTokens.stream().map(Token::getTokenId).toList();
-//                tokenRepository.updateTokenActive(waitTokensIds, TokenStatus.ACTIVE);
-//                /** log */
-//            } else {
-//                /** log */
-//            }
-//        }
-//    }
-//
-//    public void setExpiredTimeToken(String tokenUuid, LocalDateTime expiredAt) {
-//    }
 }

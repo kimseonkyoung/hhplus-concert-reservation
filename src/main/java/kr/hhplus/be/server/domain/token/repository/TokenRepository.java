@@ -18,5 +18,9 @@ public interface TokenRepository {
     
     void deleteByUserId(long userId, TokenStatus tokenStatus);
 
-    List<Token> findExpiredActiveTokens(LocalDateTime now, TokenStatus tokenStatus);
+    List<String> findWaitingTokens(int batchSize);
+
+    void moveTokenToActiveQueue(String tokenUuid);
+
+    int countActiveTokens();
 }

@@ -59,4 +59,8 @@ public class Seat {
     public void updateSeatProgress() {
         this.status = SeatStatus.PROGRESS;
     }
+
+    public boolean isOccupied() {
+        return this.status == SeatStatus.PROGRESS;
+    }
 }

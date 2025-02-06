@@ -117,7 +117,7 @@ public class ConcertReservationFacade  {
         ReservationServiceResponse reservationResponse = reservationService.reserveSeat(reservationRequest);
 
         // 4. token service 호출
-        tokenService.setExpiredTimeToken(tokenUuid, reservationResponse.getExpiredAt());
+        //tokenService.setExpiredTimeToken(tokenUuid, reservationResponse.getExpiredAt());
 
         // 4.  service dto -> reservation response dto 반환
         ReservationResponse response = ReservationDtoConverter.toControllerReservationResponse(reservationResponse);

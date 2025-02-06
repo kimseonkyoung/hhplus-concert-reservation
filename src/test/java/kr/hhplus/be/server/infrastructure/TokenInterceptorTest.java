@@ -46,11 +46,11 @@ public class TokenInterceptorTest {
         LocalDateTime expiredAt = createdAt.plusMinutes(5);
 
         // "WAIT" 상태의 응답 설정
-       given(tokenService.getTokenStatusAndPosition("123e4567-e89b-12d3-a456-426614174000"))
+       given(tokenService.getTokenPositionWithStatus("123e4567-e89b-12d3-a456-426614174000"))
                 .willReturn(new TokenServiceResponse("123e4567-e89b-12d3-a456-426614174000", 3, TokenStatus.WAIT, createdAt, expiredAt));
 
         // "ACTIVE" 상태의 응답 설정
-        given(tokenService.getTokenStatusAndPosition("123e4567-e89b-12d3-a456-426614174001"))
+        given(tokenService.getTokenPositionWithStatus("123e4567-e89b-12d3-a456-426614174001"))
                 .willReturn(new TokenServiceResponse("123e4567-e89b-12d3-a456-426614174001", null, TokenStatus.ACTIVE, createdAt, expiredAt));
 
     }
@@ -107,13 +107,13 @@ public class TokenInterceptorTest {
         LocalDateTime createdAt = LocalDateTime.now();
         LocalDateTime expiredAt = createdAt.plusMinutes(5);
 
-        given(tokenService.getTokenStatusAndPosition("123e4567-e89b-12d3-a456-426614174002"))
+        given(tokenService.getTokenPositionWithStatus("123e4567-e89b-12d3-a456-426614174002"))
                 .willReturn(new TokenServiceResponse("123e4567-e89b-12d3-a456-426614174002", null, TokenStatus.EXPIRED, createdAt, expiredAt));
 
         mockMvc.perform(get("/api/").header("x-token", "123e4567-e89b-12d3-a456-426614174002"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value(ErrorCode.INVALID_TOKEN_STATUS.getStatusCode()))
-                .andExpect(jsonPath("$.message").value(ErrorCode.INVALID_TOKEN_STATUS.getMessage()));
+                .andExpect(jsonPath("$.code").value(ErrorCode.EXPIRED_TOKEN_STATUS.getStatusCode()))
+                .andExpect(jsonPath("$.message").value(ErrorCode.EXPIRED_TOKEN_STATUS.getMessage()));
     }
 
     @Test

@@ -9,7 +9,6 @@ import kr.hhplus.be.server.domain.common.exception.SeatProgressException;
 import kr.hhplus.be.server.domain.concert.Concert;
 import kr.hhplus.be.server.domain.concert.ConcertSchedule;
 import kr.hhplus.be.server.domain.concert.Seat;
-import kr.hhplus.be.server.domain.concert.SeatStatus;
 import kr.hhplus.be.server.domain.concert.repository.ConcertRepository;
 import kr.hhplus.be.server.domain.concert.repository.ConcertScheduleRepository;
 import kr.hhplus.be.server.domain.concert.repository.SeatRepository;
@@ -18,8 +17,8 @@ import kr.hhplus.be.server.domain.common.dto.ConcertServiceDatesResponse;
 import kr.hhplus.be.server.domain.common.dto.ConcertServiceResponse;
 import kr.hhplus.be.server.domain.common.dto.SeatServiceResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 

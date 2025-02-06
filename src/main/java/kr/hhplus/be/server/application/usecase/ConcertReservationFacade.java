@@ -110,10 +110,11 @@ public class ConcertReservationFacade  {
         ReservationSearviceRequest reservationRequest = ReservationDtoConverter.toServiceReservationRequest(request);
 
         // 2. reservation service 호출
-        ReservationServiceResponse reservationResponse = reservationService.reserveSeat(reservationRequest);
+        String seatLock = "lock:" + reservationRequest.getSeatId(); // seatLock 생성
+        concertService.updateSeatProgress(seatLock, reservationRequest.getSeatId());
 
         // 3. 좌석 상태 예약중 변경 service 호출
-        concertService.updateSeatProgress(reservationResponse.getSeatId());
+        ReservationServiceResponse reservationResponse = reservationService.reserveSeat(reservationRequest);
 
         // 4. token service 호출
         tokenService.setExpiredTimeToken(tokenUuid, reservationResponse.getExpiredAt());

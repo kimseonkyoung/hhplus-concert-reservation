@@ -7,7 +7,7 @@ public enum ErrorCode {
     MISSING_TOKEN(HttpServletResponse.SC_BAD_REQUEST, "헤더에 UUID 토큰이 존재하지 않습니다."),
     INVALID_TOKEN_FORMAT(HttpServletResponse.SC_BAD_REQUEST,"대기열 UUID 토큰의 형식이 올바르지 않습니다."),
     TOKEN_NOT_FOUND(HttpServletResponse.SC_BAD_REQUEST,"유저의 해당 토큰이 대기열에 존재하지 않습니다."),
-    INVALID_TOKEN_STATUS(HttpServletResponse.SC_BAD_REQUEST, "해당 유저의 토큰 상태가 만료되었습니다."),
+    EXPIRED_TOKEN_STATUS(HttpServletResponse.SC_BAD_REQUEST, "해당 유저의 토큰 상태가 만료되었습니다."),
     BAD_REQUEST(HttpServletResponse.SC_BAD_REQUEST, "잘못된 요청입니다."),
     MISSING_USER(HttpServletResponse.SC_NOT_FOUND,"해당 유저를 찾을 수 없습니다."),
     MISSING_RESERVATION(HttpServletResponse.SC_BAD_REQUEST, "해당 예약정보를 찾을 수 없습니다."),

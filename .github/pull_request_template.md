@@ -2,17 +2,6 @@
   제목은 [(과제 STEP)] (작업한 내용) 로 작성해 주세요
   예시: [STEP-9] 이커머스 시스템 설계 
 -->
-# [STEP-14] 캐시를 통한 대기열 토큰 발급, 순번 조회 Redis 구현 변경
-
-## PR 설명
-<!-- 해당 PR이 왜 발생했고, 어떤부분에 대한 작업인지 작성해주세요. -->
-대기열 토큰 신규 발급 및 순번 조회시 RDB를 이용한 방법에서 Redis를 이용하는 방법으로 이관했습니다.
-
-1. RDB -> Redis로 TokenService, TokenRepository, Token 등 변경
-2. k6를 통한 테스트 스크립트 파일 작성
-3. docker compose를 통해 redis를 함께 도커 컨테이너에 적재
-4. 해당 테스트 기록 root - test - performance - logs 파일에 저장
-
 
 ## 리뷰 포인트
 <!-- 

@@ -1,13 +1,15 @@
 package kr.hhplus.be.server.application.usecase;
 
+import kr.hhplus.be.server.application.publisher.PaymentEventPublisher;
 import kr.hhplus.be.server.application.common.mapper.*;
 import kr.hhplus.be.server.common.rediss.DistributedLock;
 import kr.hhplus.be.server.domain.common.dto.*;
 import kr.hhplus.be.server.domain.concert.service.ConcertService;
+import kr.hhplus.be.server.domain.event.PaymentCompletedEvent;
+import kr.hhplus.be.server.domain.reservation.Reservation;
 import kr.hhplus.be.server.domain.reservation.service.PaymentService;
 import kr.hhplus.be.server.domain.reservation.service.ReservationService;
 import kr.hhplus.be.server.domain.reservation.service.ReservationTestService;
-import kr.hhplus.be.server.domain.token.TokenStatus;
 import kr.hhplus.be.server.domain.token.service.TokenService;
 import kr.hhplus.be.server.domain.User.service.UserService;
 import kr.hhplus.be.server.interfaces.api.dto.*;
@@ -27,6 +29,7 @@ public class ConcertReservationFacade  {
     private final ReservationService reservationService;
     private final PaymentService paymentService;
     private final ReservationTestService reservationTestService;
+    private final PaymentEventPublisher paymentEventPublisher;
 
     /**
      * 해당 유저의 잔액을 조회하기 위해 요청을 전달합니다.
@@ -100,13 +103,13 @@ public class ConcertReservationFacade  {
     }
 
     /**
-     * 해당 유저가 선택한 좌석을 예약 요청합니다.
-     * @return 콘서트 좌석 예약 결과 반환(ReservationResponse)
+     * 해당 유저가 선택한 좌석을 임시 점유합니다..
+     * @return 콘서트 좌석 점유 결과 반환(ReservationResponse)
      * @Author [kimseonkyoung]
      */
     @Transactional
     @DistributedLock(key = "#seatLock")
-    public ReservationResponse reserveSeat(ReservationRequest request, String tokenUuid) {
+    public ReservationResponse reserveProgressSeat(ReservationRequest request, String tokenUuid) {
         // 1. controller request dto -> service dto 변환
         ReservationSearviceRequest reservationRequest = ReservationDtoConverter.toServiceReservationRequest(request);
 
@@ -118,7 +121,7 @@ public class ConcertReservationFacade  {
         ReservationServiceResponse reservationResponse = reservationService.reserveSeat(reservationRequest);
 
         // 4. token service 호출
-        //tokenService.setExpiredTimeToken(tokenUuid, reservationResponse.getExpiredAt());
+        tokenService.setExpiredTimeToken(tokenUuid, reservationResponse.getExpiredAt());
 
         // 4.  service dto -> reservation response dto 반환
         ReservationResponse response = ReservationDtoConverter.toControllerReservationResponse(reservationResponse);
@@ -126,32 +129,28 @@ public class ConcertReservationFacade  {
     }
 
     /**
-     * 해당 유저가 선택한 좌석을 결제합니다.
+     * 해당 유저가 선택한 좌석을 예약하고 결제합니다.
      * @return 결제 결과 반환(SeatList)
      * @Author [kimseonkyoung]
      */
-    public PaymentResponse paymentSeat(Long reservationId, String tokenUuid) {
+    @Transactional
+    public PaymentResponse reserveAndPaymentCompleted(Long reservationId, String tokenUuid) {
         // 1. 해당 reservation id로 예약 정보 조회.
         ReservationServiceResponse reservationServiceResponse = reservationService.findById(reservationId);
-
         // 2. 해당 예약 정보를 토대로, seat id 추출 후 좌석 가격 조회
         SeatServiceResponse seatServiceResponse = concertService.getSeatInfo(reservationServiceResponse.getSeatId());
-
         // 3. 해당 예약 정보를 토대로, user id 추출 후 유저 잔액 조회
         userService.deductBalance(reservationServiceResponse.getUserId(), seatServiceResponse.getPrice());
-
-        // 5. 결제정보 저장
+        // 4. 결제정보 저장
         PaymentServiceResponse serviceResponse = paymentService.paymentSave(reservationServiceResponse.getReservationId());
-
-        // 6. 예약 확정
-        reservationService.confirmedReservation(reservationId);
-
-        // 7. 좌석 상태 완료
+        // 5. 예약 확정
+        ReservationServiceResponse response = reservationService.confirmedReservation(reservationId);
+        // 6. 좌석 상태 완료
         concertService.updateSeatCompleted(reservationServiceResponse.getSeatId());
-
-        // 8. 토큰 만료
-        //tokenService.expireTokenOnCompleted(tokenUuid);
-
+        // 7. 토큰 만료
+        tokenService.expireTokenOnCompleted(tokenUuid);
+        // 8. 이벤트 발행
+        paymentEventPublisher.publishPaymentCompletedEvent(response);
         // 9. Service dto -> controller dto 변환
         PaymentResponse controllerResponse = PaymentDtoConvert.toControllerPaymentResponse(serviceResponse);
         return controllerResponse;

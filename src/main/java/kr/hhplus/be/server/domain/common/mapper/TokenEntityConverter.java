@@ -9,7 +9,6 @@ public class TokenEntityConverter {
                 token.getTokenUuid(),
                 position,
                 token.getStatus(),
-                token.getCreatedAt(),
-                token.getExpiredAt());
+                token.getCreatedAt());
     }
 }

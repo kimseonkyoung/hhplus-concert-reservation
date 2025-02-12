@@ -62,6 +62,7 @@ dependencies {
 	compileOnly("org.springframework.boot:spring-boot-starter-web")
 	annotationProcessor("org.projectlombok:lombok")
 	testAnnotationProcessor("org.projectlombok:lombok")
+	implementation("io.micrometer:micrometer-registry-prometheus")
 }
 
 tasks.withType<JavaCompile> {

@@ -1,101 +1,99 @@
 package kr.hhplus.be.server.domain.token.service;
 
-import kr.hhplus.be.server.common.globalErrorHandler.ErrorCode;
-import kr.hhplus.be.server.common.log.AllRequiredLogger;
 import kr.hhplus.be.server.domain.common.mapper.TokenEntityConverter;
 import kr.hhplus.be.server.domain.common.dto.TokenServiceResponse;
 import kr.hhplus.be.server.domain.token.Token;
 import kr.hhplus.be.server.domain.token.TokenGenerator;
 import kr.hhplus.be.server.domain.token.TokenStatus;
 import kr.hhplus.be.server.domain.token.repository.TokenRepository;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RMap;
+import org.redisson.api.RScoredSortedSet;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 @Service
-@AllRequiredLogger
+@Slf4j
 public class TokenService {
 
     private final TokenRepository tokenRepository;
     private final TokenGenerator tokenGenerator;
+    private final RedissonClient redissonClient;
 
-    public TokenService(TokenRepository tokenRepository, TokenGenerator tokenGenerator) {
+    private static final String TOKEN_PREFIX = "token:";
+    private static final String WAITING_QUEUE_KEY = "token-waiting-queue";
+    private static final String ACTIVE_QUEUE_KEY = "token-active-queue";
+    private static final int TTL_SECONDS = 300;
+
+
+    Logger logger = Logger.getLogger(TokenService.class.getName());
+
+    public TokenService(TokenRepository tokenRepository, TokenGenerator tokenGenerator, RedissonClient redissonClient) {
         this.tokenRepository = tokenRepository;
         this.tokenGenerator = tokenGenerator;
+        this.redissonClient = redissonClient;
     }
 
-    //대량의 요청이 들어온다면 동시성 제어를 해야할 수도 있음.
     public TokenServiceResponse createToken(long userId) {
-        // 0. DB에서 해당 userId로 Token 존재유무 확인
-        Optional<Token> oldToken = tokenRepository.findById(userId);
-        // 1. 기존 토큰 처리 (만료 상태로 변경)
-        oldToken.ifPresent(token -> tokenRepository.updateTokenStatus(token.getTokenUuid(), TokenStatus.EXPIRED));
-        // 2. 현재 active인 토큰 갯수 조회
-        int activeCount = tokenRepository.countActiveToken(TokenStatus.ACTIVE);
-        // 3. 토큰 제조
+        // 1. 기존 ACTIVE 토큰이 있으면 삭제
+        tokenRepository.deleteByUserId(userId, TokenStatus.ACTIVE);
+
+        // 2. 현재 Active 토큰 개수 조회
+        int activeCount = countActiveTokens();
+
+        // 3. 새로운 토큰 생성
         Token newToken = tokenGenerator.createToken(activeCount);
-        // 4. 토큰 저장
+
+        // 4. 토큰 저장 (리포지토리 사용)
         tokenRepository.save(newToken);
-        // 5. 토큰 대기열 반환
-        int position = tokenRepository.selectTokenPosition(newToken.getTokenId());
-        // 6. 반환할 토큰 responseDto로 셋팅
-        TokenServiceResponse response = TokenEntityConverter.toServiceResponse(newToken, position);
-        return response;
-    }
 
-    /** 토큰 대기열 순번 조회 */
-    public TokenServiceResponse getTokenStatusAndPosition(String tokenUuid) {
-        Token token = tokenRepository.getToken(tokenUuid)
-                .orElseThrow(() -> new IllegalArgumentException(ErrorCode.TOKEN_NOT_FOUND + tokenUuid));
-        int position = tokenRepository.selectTokenPosition(token.getTokenId());
-        TokenServiceResponse response = TokenEntityConverter.toServiceResponse(token, position);
-        return response;
-    }
-
-    /** 토큰 좌석 예약 진입시 만료시간 생성 */
-    public void setExpiredTimeToken(String uuid, LocalDateTime expiredAt) {
-        tokenRepository.setExpiredTimeToken(uuid, expiredAt);
-    }
-
-    /** 결제 완료시 토큰 상태 만료로 변경 */
-    public void expireTokenOnCompleted(String tokenUuid) {
-        tokenRepository.expireTokenOnCompleted(tokenUuid, TokenStatus.EXPIRED);
-    }
-
-    /** 만료 시간이 지난 토큰을 expired 시키고, 그만큼의 토큰을 WAIT -> ACTIVE로 변경 */
-    @Transactional
-    public void processExpiredActiveTokens() {
-        // 1. 만료된 토큰 조회
-        LocalDateTime now = LocalDateTime.now();
-        List<Token> expiredActiveTokens = tokenRepository.findExpiredActiveTokens(now, TokenStatus.ACTIVE);
-
-        // 2. 만료된 ACTIVE 토큰 수 확인
-        int expiredActiveCount = expiredActiveTokens.size();
-        if (expiredActiveCount > 0 ) {
-            // 2-1. ACTIVE 토큰을 EXPIRED 업데이트
-            List<Long> expiredActiveIds = expiredActiveTokens.stream().map(Token::getTokenId).toList();
-            tokenRepository.updateTokenExpired(expiredActiveIds, TokenStatus.EXPIRED);
-            /** log */
+        // 5. 대기열 추가
+        if (newToken.getStatus() == TokenStatus.ACTIVE) {
+            addToActiveQueue(newToken.getTokenUuid());
         } else {
-            /** log */
+            addToWaitingQueue(newToken.getTokenUuid());
         }
 
-        // 3. 만료된 토큰 수만큼 WAIT 토큰 조회
-        if (expiredActiveCount > 0 ) {
-            List<Token> waitTokens = tokenRepository.findWaitTokens(TokenStatus.WAIT, expiredActiveCount);
+        logger.info("Stored token status: " + newToken.getStatus());
 
-            if (!waitTokens.isEmpty()) {
-                // 3-1. WAIT 토큰을 ACTIVE로 업데이트
-                List<Long> waitTokensIds = waitTokens.stream().map(Token::getTokenId).toList();
-                tokenRepository.updateTokenActive(waitTokensIds, TokenStatus.ACTIVE);
-                /** log */
-            } else {
-                /** log */
-            }
-        }
+        // 6. 대기열 순번 조회
+        int position = getTokenPositionWithStatus(newToken.getTokenUuid()).getPosition();
+
+        // 7. 토큰 응답 생성
+        return TokenEntityConverter.toServiceResponse(newToken, position);
+    }
+
+    public TokenServiceResponse getTokenPositionWithStatus(String tokenUuid) {
+        RScoredSortedSet<String> waitingQueue = redissonClient.getScoredSortedSet(WAITING_QUEUE_KEY);
+        Integer rank = waitingQueue.rank(tokenUuid);
+        int position = (rank != null) ? rank + 1 : -1;
+
+        // 리포지토리 활용하여 토큰 상태 조회
+        Optional<Token> tokenOptional = tokenRepository.findById(tokenUuid);
+        TokenStatus status = tokenOptional.map(Token::getStatus).orElse(TokenStatus.WAIT);
+
+        return TokenServiceResponse.createTokenPositionWithStatus(tokenUuid, position, status);
+    }
+
+    private void addToWaitingQueue(String tokenUuid) {
+        RScoredSortedSet<String> waitingQueue = redissonClient.getScoredSortedSet(WAITING_QUEUE_KEY);
+        waitingQueue.add(System.currentTimeMillis(), tokenUuid);
+    }
+
+    private void addToActiveQueue(String tokenUuid) {
+        RScoredSortedSet<String> activeQueue = redissonClient.getScoredSortedSet(ACTIVE_QUEUE_KEY);
+        activeQueue.add(System.currentTimeMillis(), tokenUuid);
+    }
+
+    private int countActiveTokens() {
+        RScoredSortedSet<String> activeQueue = redissonClient.getScoredSortedSet(ACTIVE_QUEUE_KEY);
+        return activeQueue.size();
     }
 }

@@ -7,6 +7,7 @@ import kr.hhplus.be.server.domain.concert.service.ConcertService;
 import kr.hhplus.be.server.domain.reservation.service.PaymentService;
 import kr.hhplus.be.server.domain.reservation.service.ReservationService;
 import kr.hhplus.be.server.domain.reservation.service.ReservationTestService;
+import kr.hhplus.be.server.domain.token.TokenStatus;
 import kr.hhplus.be.server.domain.token.service.TokenService;
 import kr.hhplus.be.server.domain.User.service.UserService;
 import kr.hhplus.be.server.interfaces.api.dto.*;
@@ -117,7 +118,7 @@ public class ConcertReservationFacade  {
         ReservationServiceResponse reservationResponse = reservationService.reserveSeat(reservationRequest);
 
         // 4. token service 호출
-        tokenService.setExpiredTimeToken(tokenUuid, reservationResponse.getExpiredAt());
+        //tokenService.setExpiredTimeToken(tokenUuid, reservationResponse.getExpiredAt());
 
         // 4.  service dto -> reservation response dto 반환
         ReservationResponse response = ReservationDtoConverter.toControllerReservationResponse(reservationResponse);
@@ -149,7 +150,7 @@ public class ConcertReservationFacade  {
         concertService.updateSeatCompleted(reservationServiceResponse.getSeatId());
 
         // 8. 토큰 만료
-        tokenService.expireTokenOnCompleted(tokenUuid);
+        //tokenService.expireTokenOnCompleted(tokenUuid);
 
         // 9. Service dto -> controller dto 변환
         PaymentResponse controllerResponse = PaymentDtoConvert.toControllerPaymentResponse(serviceResponse);

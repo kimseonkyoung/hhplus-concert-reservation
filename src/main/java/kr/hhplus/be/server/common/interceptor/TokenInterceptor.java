@@ -42,9 +42,10 @@ public class TokenInterceptor implements HandlerInterceptor {
 
         try {
             // 3. DB 조회(순번, 상태)
-            TokenServiceResponse tokenInfo = tokenService.getTokenStatusAndPosition(tokenUuid);
+            TokenServiceResponse tokenInfo = tokenService.getTokenPositionWithStatus(tokenUuid);
             if(tokenInfo == null) {
                 sendErrorResponse(response, ErrorCode.MISSING_USER);
+                return false;
             }
             if("ACTIVE".equalsIgnoreCase(String.valueOf(tokenInfo.getStatus()))) {
                 // 4. 상태가 "ACTIVE"이면
@@ -54,12 +55,12 @@ public class TokenInterceptor implements HandlerInterceptor {
                 sendSuccessResponse(response, TokenDtoConverter.toControllerResponse(tokenInfo));
             } else {
                 // 6. 상태가 "EXPIRED"이면
-                sendErrorResponse(response, ErrorCode.INVALID_TOKEN_STATUS);
+                sendErrorResponse(response, ErrorCode.EXPIRED_TOKEN_STATUS);
             }
             return false;
 
         } catch (RuntimeException e) {
-            log.error("RuntimeException 발생.");
+            log.error("RuntimeException 발생.", e);
             sendErrorResponse(response, ErrorCode.COMMON_ERROR);
             return false;
         }

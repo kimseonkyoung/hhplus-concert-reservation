@@ -1,0 +1,38 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: test/performance/scenario_1_single_tokenCreate_test.js
+        output: InfluxDBv1 (http://localhost:8086)
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 10m30s max duration (incl. graceful stop):
+              * default: 1 iterations shared among 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
+
+
+     ✗ Token Reset Successful
+      ↳  0% — ✓ 0 / ✗ 1
+     ✓ Token Created
+
+     checks.........................: 50.00% 1 out of 2
+     data_received..................: 351 B  6.4 kB/s
+     data_sent......................: 206 B  3.7 kB/s
+     http_req_blocked...............: avg=290µs   min=4µs     med=290µs   max=576µs   p(90)=518.79µs p(95)=547.39µs
+     http_req_connecting............: avg=75µs    min=0s      med=75µs    max=150µs   p(90)=135µs    p(95)=142.5µs 
+     http_req_duration..............: avg=25.9ms  min=19.55ms med=25.9ms  max=32.26ms p(90)=30.99ms  p(95)=31.62ms 
+       { expected_response:true }...: avg=25.9ms  min=19.55ms med=25.9ms  max=32.26ms p(90)=30.99ms  p(95)=31.62ms 
+     http_req_failed................: 0.00%  0 out of 2
+     http_req_receiving.............: avg=104.5µs min=75µs    med=104.5µs max=134µs   p(90)=128.1µs  p(95)=131.05µs
+     http_req_sending...............: avg=94.5µs  min=16µs    med=94.49µs max=173µs   p(90)=157.29µs p(95)=165.14µs
+     http_req_tls_handshaking.......: avg=0s      min=0s      med=0s      max=0s      p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=25.7ms  min=19.3ms  med=25.7ms  max=32.11ms p(90)=30.83ms  p(95)=31.47ms 
+     http_reqs......................: 2      36.378188/s
+     iteration_duration.............: avg=54.32ms min=54.32ms med=54.32ms max=54.32ms p(90)=54.32ms  p(95)=54.32ms 
+     iterations.....................: 1      18.189094/s
+
+
+running (00m00.1s), 0/1 VUs, 1 complete and 0 interrupted iterations
+default ✓ [ 100% ] 1 VUs  00m00.1s/10m0s  1/1 shared iters

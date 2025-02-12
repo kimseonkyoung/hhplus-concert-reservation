@@ -1,18 +1,42 @@
-version: '3'
+version: '3.7'
+
 services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    networks:
+      - monitoring
+    depends_on:
+      - redis
+      - mysql
+      - influxdb
+
   redis:
     image: docker.io/bitnami/redis:7.4
+    container_name: redis
+    restart: always
     environment:
-      # ALLOW_EMPTY_PASSWORD is recommended only for development.
       - ALLOW_EMPTY_PASSWORD=yes
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+      - REDIS_APPENDONLY=no  # 데이터 지속성 유지
     ports:
       - '6379:6379'
     volumes:
-      - 'redis_data:/bitnami/redis/data'
+      - redis_data:/bitnami/redis/data
+    networks:
+      - monitoring
+
   mysql:
     image: mysql:8.0
     container_name: hhplus-concert-reservation-mysql-1
+    restart: always
     ports:
       - "3307:3306"
     environment:
@@ -21,11 +45,76 @@ services:
       - MYSQL_PASSWORD=application
       - MYSQL_DATABASE=hhplus
     volumes:
-      - ./data/mysql/:/var/lib/mysql            # MySQL 데이터 저장
-      - ./init-scripts/:/docker-entrypoint-initdb.d/  # 초기화 스크립트
+      - mysql_data:/var/lib/mysql
+      - ./init-scripts/:/docker-entrypoint-initdb.d/
+    networks:
+      - monitoring
+
+  influxdb:
+    image: influxdb:1.8
+    container_name: influxdb
+    restart: always
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=k6
+      - INFLUXDB_ADMIN_USER=admin
+      - INFLUXDB_ADMIN_PASSWORD=admin
+    volumes:
+      - influxdb-storage:/var/lib/influxdb
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    depends_on:
+      - influxdb
+    networks:
+      - monitoring
+
+  mysqld_exporter:
+    image: prom/mysqld-exporter
+    container_name: mysqld_exporter
+    restart: always
+    environment:
+      - DATA_SOURCE_NAME=application:application@(mysql:3306)/hhplus
+    ports:
+      - "9104:9104"
+    networks:
+      - monitoring
+    depends_on:
+      - mysql
+
+  redis_exporter:
+    image: oliver006/redis_exporter
+    container_name: redis_exporter
+    restart: always
+    ports:
+      - "9121:9121"
+    environment:
+      - REDIS_ADDR=redis://redis:6379
+    networks:
+      - monitoring
+    depends_on:
+      - redis
+
 networks:
-  default:
+  monitoring:
     driver: bridge
+
 volumes:
   redis_data:
     driver: local
+  mysql_data:
+    driver: local
+  influxdb-storage:
+  grafana-storage:

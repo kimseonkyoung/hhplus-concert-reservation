@@ -3,6 +3,8 @@ package kr.hhplus.be.server.application.usecase;
 import kr.hhplus.be.server.application.publisher.PaymentEventPublisher;
 import kr.hhplus.be.server.application.common.mapper.*;
 import kr.hhplus.be.server.common.rediss.DistributedLock;
+import kr.hhplus.be.server.domain.apioutbox.ApiOutbox;
+import kr.hhplus.be.server.domain.apioutbox.repository.ApiOutboxRepository;
 import kr.hhplus.be.server.domain.common.dto.*;
 import kr.hhplus.be.server.domain.concert.service.ConcertService;
 import kr.hhplus.be.server.domain.event.PaymentCompletedEvent;
@@ -12,6 +14,7 @@ import kr.hhplus.be.server.domain.reservation.service.ReservationService;
 import kr.hhplus.be.server.domain.reservation.service.ReservationTestService;
 import kr.hhplus.be.server.domain.token.service.TokenService;
 import kr.hhplus.be.server.domain.User.service.UserService;
+import kr.hhplus.be.server.infrastructure.repository.Apioutbox.ApiOutboxRepositoryImpl;
 import kr.hhplus.be.server.interfaces.api.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,7 @@ public class ConcertReservationFacade  {
     private final PaymentService paymentService;
     private final ReservationTestService reservationTestService;
     private final PaymentEventPublisher paymentEventPublisher;
+    private final ApiOutboxCreatedModule apiOutboxCreatedModule;
 
     /**
      * 해당 유저의 잔액을 조회하기 위해 요청을 전달합니다.
@@ -149,9 +153,11 @@ public class ConcertReservationFacade  {
         concertService.updateSeatCompleted(reservationServiceResponse.getSeatId());
         // 7. 토큰 만료
         tokenService.expireTokenOnCompleted(tokenUuid);
-        // 8. 이벤트 발행
-        paymentEventPublisher.publishPaymentCompletedEvent(response);
-        // 9. Service dto -> controller dto 변환
+        // 8. ApiOutbox를 호출
+        ApiOutbox apiOutbox = apiOutboxCreatedModule.CreatedApiOutbox(response);
+        // 9. 이벤트 발행
+        paymentEventPublisher.publishPaymentCompletedEvent(response, apiOutbox);
+        // 10. Service dto -> controller dto 변환
         PaymentResponse controllerResponse = PaymentDtoConvert.toControllerPaymentResponse(serviceResponse);
         return controllerResponse;
     }

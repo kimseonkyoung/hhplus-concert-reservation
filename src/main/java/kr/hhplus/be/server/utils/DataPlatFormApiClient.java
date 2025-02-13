@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class DataPlatFormApiClient {
-    public void sendReservationDataToPlatform(ReservationServiceResponse response){
+    public boolean sendReservationDataToPlatform(ReservationServiceResponse response){
         log.info("해당 예약정보를 전송했습니다.", response);
+        return true;
     }
-
 }

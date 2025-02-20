@@ -1,4 +1,6 @@
 spring:
+  kafka:
+    bootstrap-servers: localhost:9092
   api-docs:
     enable: true
     path: /v3/api-docs

@@ -211,10 +211,10 @@ public class ControllerApplicationTest {
                 Seat.create(1L, 1L, SeatStatus.PROGRESS),
                 Seat.create(2L, 1L, SeatStatus.PROGRESS),
                 Seat.create(3L, 1L, SeatStatus.PROGRESS),
-                Seat.create(4L, 1L, SeatStatus.COMPLETED),
-                Seat.create(5L, 1L, SeatStatus.COMPLETED),
-                Seat.create(6L, 1L, SeatStatus.COMPLETED),
-                Seat.create(7L, 1L, SeatStatus.COMPLETED)
+                Seat.create(4L, 1L, SeatStatus.SOLD),
+                Seat.create(5L, 1L, SeatStatus.SOLD),
+                Seat.create(6L, 1L, SeatStatus.SOLD),
+                Seat.create(7L, 1L, SeatStatus.SOLD)
         );
 
         // Entity -> Service Dto

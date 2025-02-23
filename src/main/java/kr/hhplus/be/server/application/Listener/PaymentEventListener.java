@@ -5,7 +5,6 @@ import kr.hhplus.be.server.domain.apioutbox.OutboxStatus;
 import kr.hhplus.be.server.domain.apioutbox.repository.ApiOutboxRepository;
 import kr.hhplus.be.server.domain.event.PaymentCompletedEvent;
 
-import kr.hhplus.be.server.utils.DataPlatFormApiClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;

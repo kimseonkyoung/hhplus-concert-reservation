@@ -21,10 +21,11 @@ public class ApiOutboxCreatedModule {
 
     public ApiOutbox CreatedApiOutbox(ReservationServiceResponse response) {
         ApiOutbox apiOutbox = new ApiOutbox();
-        apiOutbox.setStatus(OutboxStatus.READY);
+        apiOutbox.setStatus(OutboxStatus.INIT);
         apiOutbox.setPayload(convertToJson(response));
         apiOutbox.setCreateAt(LocalDateTime.now());
         apiOutboxRepository.save(apiOutbox);
         return apiOutbox;
     }
+
 }

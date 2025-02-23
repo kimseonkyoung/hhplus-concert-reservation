@@ -41,11 +41,13 @@ public class ReservationService {
         return response;
     }
 
-    public void confirmedReservation(Long reservationId) {
+    public ReservationServiceResponse confirmedReservation(Long reservationId) {
         // 1. 결제 완료 후 예약 확정(상태 변경 및 확정 날짜)
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException("해당 예약 정보를 찾을 수 없습니다."));
 
         reservation.confirmReservation();
+        ReservationServiceResponse response = ReservationEntityConverter.toServiceReservationResponse(reservation);
+        return response;
     }
 }

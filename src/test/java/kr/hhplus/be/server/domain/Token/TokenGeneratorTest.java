@@ -31,7 +31,7 @@ class TokenGeneratorTest {
         System.out.println("TokenUuid = " + generatedToken.getTokenUuid());
         System.out.println("Status = " + generatedToken.getStatus());
         System.out.println("CreatedAt = " + generatedToken.getCreatedAt());
-        System.out.println("ExpiredAt = " + generatedToken.getExpiredAt());
+        System.out.println("ExpiredAt = " + generatedToken.getExpiresAt());
     }
 
     @Test

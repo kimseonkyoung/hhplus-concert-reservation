@@ -17,14 +17,14 @@ public class ConcertSchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "concert_schedule_id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long scheduleId;
 
     @Column(name = "concert_id", nullable = false)
     private Long concertId;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    @Column(name = "concert_date", nullable = false)
+    @Column(name = "date", nullable = false)
     private LocalDateTime date;
 
     public ConcertSchedule(Long concertId, LocalDateTime dates) {

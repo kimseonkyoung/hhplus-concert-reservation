@@ -18,16 +18,16 @@ public class Seat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "seat_id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long seatId;
 
     @Column(name = "concert_schedule_id", nullable = false)
     private Long concertScheduleId;
 
-    @Column(name = "seat_no", nullable = false)
+    @Column(name = "no", nullable = false)
     private int no;
 
-    @Column(name = "seat_price", nullable = false)
+    @Column(name = "price", nullable = false)
     private int price;
 
     @Column(name = "status", nullable = false)
@@ -53,7 +53,7 @@ public class Seat {
     }
 
     public void updateSeatCompleted() {
-        this.status = SeatStatus.COMPLETED;
+        this.status = SeatStatus.SOLD;
     }
 
     public void updateSeatProgress() {

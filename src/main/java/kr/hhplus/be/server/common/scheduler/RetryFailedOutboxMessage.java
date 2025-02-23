@@ -32,7 +32,7 @@ public class RetryFailedOutboxMessage {
         List<ApiOutbox> stuckMessages = apiOutboxRepository.findByStatus(OutboxStatus.INIT)
                 .stream()
                 .filter(msg -> msg.getCreateAt().isBefore(LocalDateTime.now().minusMinutes(10)))
-                .collect(Collectors.toList());
+                .toList();
 
         List<ApiOutbox> retryMessages = new ArrayList<>();
         retryMessages.addAll(failedMessages);

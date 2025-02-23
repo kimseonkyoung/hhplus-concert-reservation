@@ -14,10 +14,10 @@ public class Concert {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "concert_id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long concertId;
 
-    @Column(name = "concert_name", nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
     public Concert() {

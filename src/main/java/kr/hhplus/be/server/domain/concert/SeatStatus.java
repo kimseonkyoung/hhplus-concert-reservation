@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.domain.concert;
 
-public enum SeatStatus {
-    COMPLETED,
+public enum  SeatStatus {
+    SOLD,
     PROGRESS,
     AVAILABLE
 }

@@ -77,7 +77,7 @@ public class Reservation {
 
     public void confirmReservation() {
         if (this.status == ReservationStatus.CONFIRMED) {
-            throw new IllegalStateException("Reservation is already confirmed.");
+            throw new IllegalStateException("예약이 이미 확정되었습니다.");
         }
         this.status = ReservationStatus.CONFIRMED;
         this.comfirmAt = LocalDateTime.now();

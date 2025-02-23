@@ -5,6 +5,7 @@ import kr.hhplus.be.server.domain.apioutbox.ApiOutbox;
 import kr.hhplus.be.server.domain.apioutbox.OutboxStatus;
 import kr.hhplus.be.server.domain.apioutbox.repository.ApiOutboxRepository;
 import kr.hhplus.be.server.infrastructure.orm.Apioutbox.JpaApiOutboxRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -13,18 +14,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 @AllRequiredLogger
 public class ApiOutboxRepositoryImpl implements ApiOutboxRepository {
 
     private final JpaApiOutboxRepository jpaApiOutboxRepository;
 
-    public ApiOutboxRepositoryImpl(JpaApiOutboxRepository jpaApiOutboxRepository) {
-        this.jpaApiOutboxRepository = jpaApiOutboxRepository;
-    }
 
     @Override
     public Collection<Object> findByCreatedAtBefore(LocalDateTime now, OutboxStatus outboxStatus) {
-        return jpaApiOutboxRepository.findByCreatedAtBefore(now, outboxStatus);
+        return List.of();
     }
 
     @Override

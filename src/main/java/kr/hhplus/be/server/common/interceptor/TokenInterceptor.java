@@ -45,6 +45,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             TokenServiceResponse tokenInfo = tokenService.getTokenPositionWithStatus(tokenUuid);
             if(tokenInfo == null) {
                 sendErrorResponse(response, ErrorCode.MISSING_USER);
+                return false;
             }
             if("ACTIVE".equalsIgnoreCase(String.valueOf(tokenInfo.getStatus()))) {
                 // 4. 상태가 "ACTIVE"이면
@@ -59,7 +60,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             return false;
 
         } catch (RuntimeException e) {
-            log.error("RuntimeException 발생.");
+            log.error("RuntimeException 발생.", e);
             sendErrorResponse(response, ErrorCode.COMMON_ERROR);
             return false;
         }

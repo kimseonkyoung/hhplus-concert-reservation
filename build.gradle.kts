@@ -63,13 +63,6 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	testAnnotationProcessor("org.projectlombok:lombok")
 	implementation("io.micrometer:micrometer-registry-prometheus")
-
-	// kafka
-	testImplementation("org.testcontainers:kafka:1.19.7")
-	testImplementation("org.testcontainers:junit-jupiter:1.19.7")
-
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springframework.kafka:spring-kafka") // Kafka 의존성 추가
 }
 
 tasks.withType<JavaCompile> {

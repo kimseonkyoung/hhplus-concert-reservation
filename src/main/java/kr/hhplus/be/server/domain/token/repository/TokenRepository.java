@@ -14,8 +14,6 @@ public interface TokenRepository {
     
     Optional<Token> findById(String tokenUuid);
 
-    Optional<Token> findById(long userId);
-
     void updateTokenStatus(String tokenUuid, TokenStatus status);
     
     void deleteByUserId(long userId, TokenStatus tokenStatus);

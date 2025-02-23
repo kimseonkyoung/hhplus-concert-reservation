@@ -33,9 +33,6 @@ public class TokenServiceResponse {
         this.status = status;
     }
 
-    public TokenServiceResponse(String uuid, Object o, TokenStatus tokenStatus, LocalDateTime createdAt, LocalDateTime expiredAt) {
-    }
-
     // 생성자를 팩토리 메서드로 생성
     public static TokenServiceResponse create(String tokenUuid, Integer position, TokenStatus status, LocalDateTime createdAt) {
         return new TokenServiceResponse(tokenUuid, position, status, createdAt);

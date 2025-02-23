@@ -1,48 +1,46 @@
 package kr.hhplus.be.server.common.scheduler;
 
 
-import kr.hhplus.be.server.application.kafka.KafkaProducer;
 import kr.hhplus.be.server.domain.apioutbox.ApiOutbox;
 import kr.hhplus.be.server.domain.apioutbox.OutboxStatus;
 import kr.hhplus.be.server.domain.apioutbox.repository.ApiOutboxRepository;
+import kr.hhplus.be.server.domain.common.dto.ReservationServiceResponse;
+import kr.hhplus.be.server.utils.DataPlatFormApiClient;
+import kr.hhplus.be.server.utils.JsonUtil;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class RetryFailedOutboxMessage {
     private final ApiOutboxRepository apiOutboxRepository;
-    private final KafkaProducer kafkaProducer;
+    private final DataPlatFormApiClient dataPlatFormApiClient;
 
-
-    public RetryFailedOutboxMessage(ApiOutboxRepository apiOutboxRepository, KafkaProducer kafkaProducer) {
+    public RetryFailedOutboxMessage(ApiOutboxRepository apiOutboxRepository, DataPlatFormApiClient dataPlatFormApiClient) {
         this.apiOutboxRepository = apiOutboxRepository;
-        this.kafkaProducer = kafkaProducer;
+        this.dataPlatFormApiClient = dataPlatFormApiClient;
     }
 
-    @Scheduled(fixedRate = 30000) // 30초마다 실행
+    @Scheduled(cron = "0/5 * * * * *")
     @Transactional
-    public void retryFailedMessages() {
-        List<ApiOutbox> failedMessages = apiOutboxRepository.findByStatus(OutboxStatus.SEND_FAILED);
-        List<ApiOutbox> stuckMessages = apiOutboxRepository.findByStatus(OutboxStatus.INIT)
-                .stream()
-                .filter(msg -> msg.getCreateAt().isBefore(LocalDateTime.now().minusMinutes(10)))
-                .toList();
+    public void retryFailedOutbox() {
+        List<ApiOutbox> failedMessages = apiOutboxRepository.findByStatus(OutboxStatus.FAILED);
 
-        List<ApiOutbox> retryMessages = new ArrayList<>();
-        retryMessages.addAll(failedMessages);
-        retryMessages.addAll(stuckMessages);
-
-        for (ApiOutbox outbox : retryMessages) {
-            kafkaProducer.sendMessage("payment-topic", outbox.getPayload());
-            outbox.markAsSuccess();
-            apiOutboxRepository.save(outbox);
+        for (ApiOutbox message : failedMessages) {
+            try {
+                ReservationServiceResponse response = JsonUtil.fromJson(message.getPayload(), ReservationServiceResponse.class);
+                boolean success = dataPlatFormApiClient.sendReservationDataToPlatform(response);
+                if (success) {
+                    message.markAsCompleted();
+                } else {
+                    message.markAsFailed();
+                }
+            } catch (Exception e) {
+                message.markAsFailed();
+                apiOutboxRepository.save(message);
+            }
         }
-
     }
 }

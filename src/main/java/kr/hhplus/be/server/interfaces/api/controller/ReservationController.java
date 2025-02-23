@@ -31,7 +31,7 @@ public class ReservationController {
             HttpServletRequest request
     ) {
         String tokenUuid = request.getHeader("x-token");
-        ReservationResponse response = facade.reserveSeat(requestBody, tokenUuid);
+        ReservationResponse response = facade.reserveProgressSeat(requestBody, tokenUuid);
         return ResponseEntity.ok(response);
     }
 
@@ -42,7 +42,7 @@ public class ReservationController {
             HttpServletRequest request
     ) {
         String tokenUuid = request.getHeader("x-token");
-        PaymentResponse response = facade.paymentSeat(reservationId, tokenUuid);
+        PaymentResponse response = facade.reserveAndPaymentCompleted(reservationId, tokenUuid);
         return ResponseEntity.ok(response);
     }
 

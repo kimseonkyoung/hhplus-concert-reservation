@@ -20,24 +20,20 @@ public class ApiOutbox {
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime createAt = LocalDateTime.now();
+    private LocalDateTime createAt;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private OutboxStatus status = OutboxStatus.INIT;
+    private OutboxStatus status;
 
     @Column(name = "payload", columnDefinition = "JSON", nullable = false)
     private String payload;
 
-    private LocalDateTime updatedAt;
-
-    public void markAsSuccess() {
-        this.status = OutboxStatus.SEND_SUCCESS;
-        this.updatedAt = LocalDateTime.now();
+    public void markAsFailed() {
+        this.status = OutboxStatus.FAILED;
     }
 
-    public void markAsFailed() {
-        this.status = OutboxStatus.SEND_FAILED;
-        this.updatedAt = LocalDateTime.now();
+    public void markAsCompleted() {
+        this.status = OutboxStatus.COMPLETED;
     }
 }

@@ -27,8 +27,10 @@ public class TokenService {
     private final TokenGenerator tokenGenerator;
     private final RedissonClient redissonClient;
 
+    private static final String TOKEN_PREFIX = "token:";
     private static final String WAITING_QUEUE_KEY = "token-waiting-queue";
     private static final String ACTIVE_QUEUE_KEY = "token-active-queue";
+    private static final int TTL_SECONDS = 300;
 
 
     Logger logger = Logger.getLogger(TokenService.class.getName());
@@ -91,12 +93,7 @@ public class TokenService {
     }
 
     private int countActiveTokens() {
-        return 0;
-    }
-
-    public void expireTokenOnCompleted(String tokenUuid) {
-    }
-
-    public void setExpiredTimeToken(String tokenUuid, LocalDateTime expiredAt) {
+        RScoredSortedSet<String> activeQueue = redissonClient.getScoredSortedSet(ACTIVE_QUEUE_KEY);
+        return activeQueue.size();
     }
 }

@@ -1,5 +1,4 @@
 package kr.hhplus.be.server.domain.token;
-import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,4 +31,5 @@ public class Token {
     public static Token createWait(String tokenUuid, LocalDateTime createdAt) {
         return new Token(tokenUuid, TokenStatus.WAIT, createdAt);
     }
+
 }

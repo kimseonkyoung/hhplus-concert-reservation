@@ -1,0 +1,38 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: test/performance/scenario_1_single_tokenCreate_test.js
+        output: InfluxDBv1 (http://localhost:8086)
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 10m30s max duration (incl. graceful stop):
+              * default: 1 iterations shared among 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
+
+
+     ✗ Token Reset Successful
+      ↳  0% — ✓ 0 / ✗ 1
+     ✓ Token Created
+
+     checks.........................: 50.00% 1 out of 2
+     data_received..................: 351 B  1.8 kB/s
+     data_sent......................: 206 B  1.0 kB/s
+     http_req_blocked...............: avg=313µs    min=3µs      med=313µs    max=623µs    p(90)=561µs    p(95)=592µs   
+     http_req_connecting............: avg=67µs     min=0s       med=67µs     max=134µs    p(90)=120.6µs  p(95)=127.3µs 
+     http_req_duration..............: avg=96.67ms  min=38.96ms  med=96.67ms  max=154.39ms p(90)=142.84ms p(95)=148.62ms
+       { expected_response:true }...: avg=96.67ms  min=38.96ms  med=96.67ms  max=154.39ms p(90)=142.84ms p(95)=148.62ms
+     http_req_failed................: 0.00%  0 out of 2
+     http_req_receiving.............: avg=229.5µs  min=59µs     med=229.5µs  max=400µs    p(90)=365.9µs  p(95)=382.95µs
+     http_req_sending...............: avg=40.5µs   min=16µs     med=40.5µs   max=65µs     p(90)=60.1µs   p(95)=62.55µs 
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=96.4ms   min=38.54ms  med=96.4ms   max=154.26ms p(90)=142.69ms p(95)=148.48ms
+     http_reqs......................: 2      10.168078/s
+     iteration_duration.............: avg=195.82ms min=195.82ms med=195.82ms max=195.82ms p(90)=195.82ms p(95)=195.82ms
+     iterations.....................: 1      5.084039/s
+
+
+running (00m00.2s), 0/1 VUs, 1 complete and 0 interrupted iterations
+default ✓ [ 100% ] 1 VUs  00m00.2s/10m0s  1/1 shared iters
